@@ -1,0 +1,45 @@
+{
+  "name": "weback",
+  "version": "0.1.0",
+  "description": "Repositorio de BackEnd del proyecto WeDeal",
+  "main": "api/index.js",
+  "scripts": {
+    "start": "node api/index.js",
+    "dev": "nodemon -r dotenv/config api/index.js",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "test:watch": "jest --watch",
+    "test:update": "jest -u",
+    "lint": "standard",
+    "lint:fix": "standard --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/resparzasoto/weback.git"
+  },
+  "keywords": [],
+  "author": "Rubén Esparza <rubenesparzasoto95@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/resparzasoto/weback/issues"
+  },
+  "homepage": "https://github.com/resparzasoto/weback#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "dotenv": "^8.2.0",
+    "husky": "^4.3.0",
+    "jest": "^26.4.2",
+    "nodemon": "^2.0.4",
+    "standard": "^14.3.4",
+    "superagent": "^6.1.0",
+    "supertest": "^4.0.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint && npm test"
+    }
+  }
+}
