@@ -2,30 +2,28 @@
 
 const express = require('express')
 
-const response = require('../network/response')
+const user = require('./components/user/network')
+const login = require('./components/auth/network')
+
 const errors = require('../network/errors')
 const config = require('../config')
 
-const PREFIX = '/api'
+const BASE_PATH = '/api'
 const API_VERSION = '/v1'
-const BASE_PATH = `${PREFIX}${API_VERSION}`
+const API_URL = `${BASE_PATH}${API_VERSION}`
 
 const app = express()
-const router = express.Router()
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-router.get('', (req, res) => {
-  response.success(req, res, 'Hello World!', 200)
-})
-
-app.use(BASE_PATH, router)
+app.use(`${API_URL}/users`, user)
+app.use(`${API_URL}/auth`, login)
 
 app.use(errors)
 
 app.listen(config.api.port, () => {
   if (config.api.env === 'development') {
-    console.log(`API Listen in http://localhost:${config.api.port}${BASE_PATH}`)
+    console.log(`API Listen in http://localhost:${config.api.port}${API_URL}`)
   }
 })

@@ -25,7 +25,10 @@
   },
   "homepage": "https://github.com/resparzasoto/weback#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "bcrypt": "^5.0.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "nanoid": "^3.1.12"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -41,5 +44,10 @@
     "hooks": {
       "pre-commit": "npm run lint && npm test"
     }
+  },
+  "standard": {
+    "env": [
+      "jest"
+    ]
   }
 }
