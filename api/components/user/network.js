@@ -4,14 +4,15 @@ const express = require('express')
 
 const response = require('../../../network/response')
 const controller = require('./index')
+const secure = require('./secure')
 
 const router = express.Router()
 
-router.get('/', list)
-router.get('/:id', get)
-router.post('/', upsert)
-router.put('/', upsert)
-router.delete('/:id', remove)
+router.get('/', secure('list'), list)
+router.get('/:id', secure('get'), get)
+router.post('/', secure('insert'), upsert)
+router.put('/', secure('update'), upsert)
+router.delete('/:id', secure('delete'), remove)
 
 function list (req, res, next) {
   controller.list()

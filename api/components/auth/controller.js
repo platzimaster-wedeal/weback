@@ -3,6 +3,7 @@
 const bcrypt = require('bcrypt')
 
 const auth = require('../../../auth')
+const error = require('../../../utils/error')
 
 const TABLE = 'auths'
 const SALT_OF_ENCRYPTION = 7
@@ -14,7 +15,7 @@ module.exports = (store = require('../../../store/dummy')) => {
     const areEquals = await bcrypt.compare(password, data.password)
 
     if (!areEquals) {
-      throw new Error('Invalid information')
+      throw error('Invalid information', 401)
     }
 
     return auth.sign(data)

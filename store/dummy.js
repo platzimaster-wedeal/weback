@@ -1,5 +1,7 @@
 'use strict'
 
+const config = require('../config')
+
 const db = {
   users: [
     { id: '1', name: 'Rubén' },
@@ -32,7 +34,9 @@ async function upsert (table, data) {
     db[table].push(data)
   }
 
-  console.table(db[table])
+  if (config.api.env === 'development') {
+    console.table('upsert', db[table])
+  }
 
   return true
 }
