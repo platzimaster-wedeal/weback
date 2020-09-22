@@ -26,10 +26,12 @@ async function get (table, id) {
 }
 
 async function upsert (table, data) {
+  let inserted = true
   const index = findIndexById(table, data)
 
   if (~index) {
     db[table][index] = data
+    inserted = false
   } else {
     db[table].push(data)
   }
@@ -38,7 +40,10 @@ async function upsert (table, data) {
     console.table('upsert', db[table])
   }
 
-  return true
+  return {
+    data,
+    inserted
+  }
 }
 
 async function remove (table, id) {

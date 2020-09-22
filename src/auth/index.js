@@ -19,7 +19,7 @@ const check = {
       console.log('decodedHeader', decoded)
     }
 
-    if (decoded.id !== owner) {
+    if (decoded.id_user !== Number(owner)) {
       throw error("You can't do that", 403)
     }
   },

@@ -6,8 +6,8 @@ module.exports = function checkAuth (action) {
   function middleWare (req, res, next) {
     switch (action) {
       case 'update':
-      case 'delete': {
-        const owner = req.body.id
+      case 'remove': {
+        const owner = req.params.id
         auth.check.own(req, owner)
         next()
         break

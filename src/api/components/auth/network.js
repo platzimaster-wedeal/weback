@@ -10,9 +10,9 @@ const router = express.Router()
 router.post('/login', login)
 
 function login (req, res, next) {
-  controller.login(req.body.username, req.body.password)
-    .then(token => {
-      response.success(req, res, token, 200)
+  controller.login(req.body)
+    .then(result => {
+      response.success(req, res, result, 200)
     })
     .catch(next)
 }

@@ -4,8 +4,8 @@
   "description": "Repositorio de BackEnd del proyecto WeDeal",
   "main": "api/index.js",
   "scripts": {
-    "start": "node api/index.js",
-    "dev": "nodemon -r dotenv/config api/index.js",
+    "start": "node src/api/index.js",
+    "dev": "nodemon src/api/index.js",
     "test": "jest --passWithNoTests",
     "test:coverage": "jest --coverage",
     "test:watch": "jest --watch",
@@ -27,7 +27,9 @@
   "dependencies": {
     "bcrypt": "^5.0.0",
     "express": "^4.17.1",
+    "fs-extra": "^9.0.1",
     "jsonwebtoken": "^8.5.1",
+    "mssql": "^6.2.2",
     "nanoid": "^3.1.12"
   },
   "devDependencies": {

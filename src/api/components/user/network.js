@@ -10,9 +10,9 @@ const router = express.Router()
 
 router.get('/', secure('list'), list)
 router.get('/:id', secure('get'), get)
-router.post('/', secure('insert'), upsert)
-router.put('/', secure('update'), upsert)
-router.delete('/:id', secure('delete'), remove)
+router.post('/', secure('insert'), insert)
+router.put('/:id', secure('update'), update)
+router.delete('/:id', secure('remove'), remove)
 
 function list (req, res, next) {
   controller.list()
@@ -24,16 +24,24 @@ function list (req, res, next) {
 
 function get (req, res, next) {
   controller.get(req.params.id)
-    .then(user => {
-      response.success(req, res, user, 200)
+    .then(result => {
+      response.success(req, res, result, 200)
     })
     .catch(next)
 }
 
-function upsert (req, res, next) {
-  controller.upsert(req.body)
+function insert (req, res, next) {
+  controller.insert(req.body)
     .then(result => {
       response.success(req, res, result, 200)
+    })
+    .catch(next)
+}
+
+function update (req, res, next) {
+  controller.update(req.params.id, req.body)
+    .then(result => {
+      response.success(req, res, result, 201)
     })
     .catch(next)
 }
