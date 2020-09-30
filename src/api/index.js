@@ -6,6 +6,7 @@ const user = require('./components/user/network')
 const login = require('./components/auth/network')
 const country = require('./components/country/network')
 const state = require('./components/state/network')
+const city = require('./components/city/network')
 
 const errors = require('../network/errors')
 const config = require('../config')
@@ -23,6 +24,7 @@ app.use(`${API_URL}/users`, user)
 app.use(`${API_URL}/auth`, login)
 app.use(`${API_URL}/countries`, country)
 app.use(`${API_URL}/countries`, state)
+app.use(`${API_URL}/countries`, city)
 app.use(errors)
 
 app.listen(config.api.port, () => {
