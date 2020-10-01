@@ -41,8 +41,10 @@ class MssqlProvider {
 				await closePool();
 				// throw error('Lost connection', 503);
 			} );
+			console.log('DB is connectted succesfully')
 			return MssqlProvider.pool;
 		} catch( e ) {
+			console.log(e)
 			MssqlProvider.pool = null;
 			// throw error('Unexpected problem to get connection', 503);
 		}

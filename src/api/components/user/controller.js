@@ -41,14 +41,10 @@ module.exports = (usersService, authsService) => {
     const params = {
       id_user: id
     }
-
-    // BUG: La db puede tener inconsistencia si solamente se elimina en una tabla
-    const recordset = await usersService.remove(params)
-
+    const recordset = await authsService.remove(params)
     if (recordset.count > 0) {
-      await authsService.remove(params)
+      await usersService.remove(params)
     }
-
     return recordset
   }
 

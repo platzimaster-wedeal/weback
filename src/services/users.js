@@ -25,9 +25,10 @@ class UsersService {
       `
         SELECT *
         FROM users WITH (NOLOCK)
-        WHERE id_user = @id_user
+        WHERE id = @id_user
       `
     )
+    console.log(recordset)
     return recordset[0] || {}
   }
 
@@ -35,30 +36,25 @@ class UsersService {
     first_name,
     last_name,
     email,
+    date_of_birth,
     telephone,
     id_city,
     nationality,
     description,
-    profile_image,
-    id_work_area,
-    work_experience,
-    skills,
-    education
+    id_work_area
   }) {
+    console.log(new Date(date_of_birth))
     const cnx = await this.provider.getConnection()
     const request = await cnx.request()
     request.input('first_name', first_name)
     request.input('last_name', last_name)
     request.input('email', email)
+    request.input('date_of_birth', new Date(date_of_birth))
     request.input('telephone', telephone)
     request.input('id_city', id_city)
     request.input('nationality', nationality)
     request.input('description', description)
-    request.input('profile_image', profile_image)
     request.input('id_work_area', id_work_area)
-    request.input('work_experience', work_experience)
-    request.input('skills', skills)
-    request.input('education', education)
     const { recordset } = await request.query(
       `
         INSERT INTO users
@@ -66,30 +62,26 @@ class UsersService {
           first_name,
           last_name,
           email,
+          date_of_birth,
           telephone,
           id_city,
           nationality,
           description,
-          profile_image,
-          id_work_area,
-          work_experience,
-          skills,
-          education
+          id_work_area
+          
         )
         VALUES
         (
           @first_name,
           @last_name,
           @email,
+          @date_of_birth,
           @telephone,
           @id_city,
           @nationality,
           @description,
-          @profile_image,
-          @id_work_area,
-          @work_experience,
-          @skills,
-          @education
+          @id_work_area
+          
         )
 
         SELECT SCOPE_IDENTITY() AS id_user
@@ -106,11 +98,8 @@ class UsersService {
     id_city,
     nationality,
     description,
-    profile_image,
-    id_work_area,
-    work_experience,
-    skills,
-    education
+    id_work_area
+
   }) {
     const cnx = await this.provider.getConnection()
     const request = await cnx.request()
@@ -122,11 +111,7 @@ class UsersService {
     request.input('id_city', id_city)
     request.input('nationality', nationality)
     request.input('description', description)
-    request.input('profile_image', profile_image)
     request.input('id_work_area', id_work_area)
-    request.input('work_experience', work_experience)
-    request.input('skills', skills)
-    request.input('education', education)
     const { recordset } = await request.query(
       `
         UPDATE users
@@ -137,12 +122,8 @@ class UsersService {
             id_city          = @id_city,
             nationality      = @nationality,
             description      = @description,
-            profile_image    = @profile_image,
-            id_work_area     = @id_work_area,
-            work_experience  = @work_experience,
-            skills           = @skills,
-            education        = @education
-        WHERE id_user = @id_user
+            id_work_area     = @id_work_area
+        WHERE id = @id_user
 
         SELECT @@ROWCOUNT AS [count]
       `
@@ -151,18 +132,22 @@ class UsersService {
   }
 
   async remove ({ id_user }) {
-    const cnx = await this.provider.getConnection()
-    const request = await cnx.request()
-    request.input('id_user', id_user)
-    const { recordset } = await request.query(
-      `
-        DELETE FROM users
-        WHERE id_user = @id_user
-
-        SELECT @@ROWCOUNT AS [count]
-      `
-    )
-    return recordset[0] || {}
+    try {
+      const cnx = await this.provider.getConnection()
+      const request = await cnx.request()
+      request.input('id_user', id_user)
+      const { recordset } = await request.query(
+        `
+          DELETE FROM users
+          WHERE id = @id_user
+          SELECT @@ROWCOUNT AS [count]
+        `
+      )
+      return recordset[0] || {}
+    } catch (error) {
+      console.log('Error seguramente en el controller', error)
+      return false
+    }
   }
 }
 
