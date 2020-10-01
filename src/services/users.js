@@ -68,7 +68,6 @@ class UsersService {
           nationality,
           description,
           id_work_area
-          
         )
         VALUES
         (
@@ -81,7 +80,6 @@ class UsersService {
           @nationality,
           @description,
           @id_work_area
-          
         )
 
         SELECT SCOPE_IDENTITY() AS id_user
@@ -99,7 +97,6 @@ class UsersService {
     nationality,
     description,
     id_work_area
-
   }) {
     const cnx = await this.provider.getConnection()
     const request = await cnx.request()
@@ -124,7 +121,6 @@ class UsersService {
             description      = @description,
             id_work_area     = @id_work_area
         WHERE id = @id_user
-
         SELECT @@ROWCOUNT AS [count]
       `
     )
