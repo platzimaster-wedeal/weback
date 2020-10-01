@@ -66,18 +66,23 @@ class AuthsService {
   }
 
   async remove ({ id_user }) {
-    const cnx = await this.provider.getConnection()
-    const request = await cnx.request()
-    request.input('id_user', id_user)
-    const { recordset } = await request.query(
-      `
-        DELETE FROM auths
-        WHERE id_user = @id_user
+    try {
+      const cnx = await this.provider.getConnection()
+      const request = await cnx.request()
+      request.input('id_user', id_user)
+      const { recordset } = await request.query(
+        `
+          DELETE FROM auths
+          WHERE id_user = @id_user
 
-        SELECT @@ROWCOUNT AS [count]
-      `
-    )
-    return recordset[0] || {}
+          SELECT @@ROWCOUNT AS [count]
+        `
+      )
+      return recordset[0] || {}
+    } catch (error) {
+      console.log('Error seguramente en el controller', error)
+      return 'Internal Server Error'
+    }
   }
 }
 

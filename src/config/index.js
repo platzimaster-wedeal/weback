@@ -18,7 +18,6 @@ const {
   MSSQL_OPTIONS_ENABLE_ARITH_ABORT
 } = process.env
 
-assert(PORT, 'PORT is required')
 assert(NODE_ENV, 'NODE_ENV is required')
 
 module.exports = {
