@@ -26,10 +26,13 @@
   "homepage": "https://github.com/resparzasoto/weback#readme",
   "dependencies": {
     "bcrypt": "^5.0.0",
+    "cloudinary": "^1.23.0",
     "express": "^4.17.1",
     "fs-extra": "^9.0.1",
     "jsonwebtoken": "^8.5.1",
+    "morgan": "^1.10.0",
     "mssql": "^6.2.2",
+    "multer": "^1.4.2",
     "nanoid": "^3.1.12"
   },
   "devDependencies": {
