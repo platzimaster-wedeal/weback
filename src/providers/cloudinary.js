@@ -21,7 +21,6 @@ class cloudinaryProvider {
     async uploadFile(path) {
         try {
             const result = await cloudinary.uploader.upload(path)
-            console.log(result)
             return result;
         } catch (e) {
             console.log(e)

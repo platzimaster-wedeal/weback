@@ -42,12 +42,13 @@ class UsersService {
     description,
     id_work_area,
     employee,
-    employer,
+    employeer,
     id_language,
     file_url,
     degree_title,
     degree_description,
-    last_job_title
+    last_job_title,
+    myAvatar
     //TODO: FALTA EL CAMPO DEL AVATAR
   }) {
     const cnx = await this.provider.getConnection()
@@ -61,12 +62,13 @@ class UsersService {
     request.input('description', description)
     request.input('id_work_area', id_work_area)
     request.input('employee', employee)
-    request.input('employer', employer)
+    request.input('employeer', employeer)
     request.input('id_language', id_language)
     request.input('file_url', file_url)
     request.input('degree_title', degree_title)
     request.input('degree_description', degree_description)
     request.input('last_job_title', last_job_title)
+    request.input('avatar', myAvatar)
     const { recordset } = await request.query(
       `
         DECLARE @id_user INT = 0;
@@ -84,7 +86,9 @@ class UsersService {
           description,
           id_work_area,
           employee,
-          employeer
+          employeer,
+          avatar
+          
         )
         VALUES
         (
@@ -97,7 +101,9 @@ class UsersService {
           @description,
           @id_work_area,
           @employee,
-          @employer
+          @employeer,
+          @avatar
+          
         )
 
         SET @id_user = IDENT_CURRENT('users')
@@ -135,6 +141,7 @@ class UsersService {
     id_work_area,
     employee,
     employeer,
+    myAvatar,
     id_language,
     file_url,
     degree_title,
@@ -156,6 +163,7 @@ class UsersService {
     request.input('id_work_area', id_work_area)
     request.input('employee', employee)
     request.input('employeer', employeer)
+    request.input('avatar', myAvatar)
     request.input('id_language', id_language)
     request.input('file_url', file_url)
     request.input('degree_title', degree_title)
@@ -174,7 +182,8 @@ class UsersService {
             description      = @description,
             id_work_area     = @id_work_area,
             employee         = @employee,
-            employeer         = @employeer
+            employeer        = @employeer,
+            avatar           = @avatar
         WHERE id = @id_user
 
         UPDATE users_languages
