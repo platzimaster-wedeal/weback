@@ -141,6 +141,7 @@ class UsersService {
     degree_description,
     last_job_title
 
+
   }) {
     const cnx = await this.provider.getConnection()
     const request = await cnx.request()
@@ -192,6 +193,7 @@ class UsersService {
             file_url        = @file_url,
             description     = @degree_description
         WHERE id_employee   = @id_employee
+
 
         SELECT @@ROWCOUNT AS [count]
       `
