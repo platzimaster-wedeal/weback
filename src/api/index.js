@@ -29,7 +29,14 @@ const storage = multer.diskStorage({
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
   }
 })
-app.use(multer({storage}).single('myFile'))
+app.use(multer({storage}).fields([
+  {
+    name: 'myFile', maxCount: 10,
+  },
+  {
+    name: 'myAvatar', maxCount: 1
+  }
+]))
 
 // Routes
 app.use(`${API_URL}/users`, user)
