@@ -31,7 +31,8 @@ function get (req, res, next) {
 }
 
 function insert (req, res, next) {
-  controller.insert(req.body)
+  
+  controller.insert(req.body, req.file)
     .then(result => {
       response.success(req, res, result, 200)
     })
@@ -39,7 +40,7 @@ function insert (req, res, next) {
 }
 
 function update (req, res, next) {
-  controller.update(req.params.id, req.body)
+  controller.update(req.params.id, req.body, req.file)
     .then(result => {
       response.success(req, res, result, 201)
     })
