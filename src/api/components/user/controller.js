@@ -2,7 +2,7 @@
 
 const encrypter = require('../../../utils/encrypter')
 
-module.exports = (usersService, authsService) => {
+module.exports = (usersService, authsService, filesService) => {
   async function list () {
     return usersService.list()
   }
@@ -15,8 +15,14 @@ module.exports = (usersService, authsService) => {
     return usersService.get(params)
   }
 
-  async function insert (body) {
-    // BUG: La db puede tener inconsistencia si solamente se inserta en una tabla
+  async function insert (body, {path}) {
+    const { secure_url } = await filesService.uploadFile(path);
+
+    body = {
+      ...body,
+      file_url: secure_url
+    };
+
     const recordset = await usersService.insert(body)
 
     if (recordset.id_user) {
@@ -33,7 +39,12 @@ module.exports = (usersService, authsService) => {
     return recordset
   }
 
-  async function update (id, body) {
+  async function update (id, body, {path}) {
+    const { secure_url } = await filesService.uploadFile(path);
+    body = {
+      ...body,
+      file_url: secure_url
+    };
     return await usersService.update(id, body)
   }
 
