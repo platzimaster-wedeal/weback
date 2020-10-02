@@ -1,28 +1,35 @@
 'use strict'
 
-const sql = require('mssql')
-
-const config = require('../config')
+const cloudinary = require('cloudinary')
 const error = require('../utils/error')
 
-const dbConfig = {
-  server: config.mssql.server,
-  port: config.mssql.port,
-  user: config.mssql.user,
-  password: config.mssql.password,
-  database: config.mssql.database,
-  options: config.mssql.options
+const cloudConfig = {
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
 }
 
-class CloudinaryProvider {
-  constructor () {
-  }
-
-  async uploadFile ({ file }) {
-    return {
-      fileUrl: 'https://imgurl.me/images/2020/09/11/profilededaultbb7053428141edf1.png'
+class cloudinaryProvider {
+    constructor(){
+        this.getConnection()
     }
-  }
-};
+    
+    async getConnection() {
+        cloudinary.config(cloudConfig)
+    }
 
-module.exports = new CloudinaryProvider()
+    async uploadFile(path) {
+        try {
+            const result = await cloudinary.uploader.upload(path)
+            console.log(result)
+            return result;
+        } catch (e) {
+            console.log(e)
+            throw error('There was an error while uploading the file' , 500)
+        }
+    }
+
+
+}
+
+module.exports = new cloudinaryProvider()
