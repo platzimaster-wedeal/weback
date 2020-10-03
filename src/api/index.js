@@ -10,7 +10,7 @@ const cors = require('cors')
 // Utils
 const errors = require('../network/errors')
 
-//Components
+// Components
 const user = require('./components/user/network')
 const login = require('./components/auth/network')
 const country = require('./components/country/network')
@@ -29,16 +29,16 @@ const app = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(morgan('dev'))
-app.use(cors())
+app.use(cors({origin: 'http://localhost:3000'}))
 const storage = multer.diskStorage({
   destination: path.join(__dirname, 'public/uploads'),
   filename: (req, file, cb) => {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
   }
 })
-app.use(multer({storage}).fields([
+app.use(multer({ storage }).fields([
   {
-    name: 'myFile', maxCount: 10,
+    name: 'myFile', maxCount: 10
   },
   {
     name: 'myAvatar', maxCount: 1
@@ -54,7 +54,6 @@ app.use(`${API_URL}/countries`, city)
 app.use(`${API_URL}/posts`, post)
 app.use(`${API_URL}/problems`, problem)
 app.use(errors)
-
 
 // Server initialization
 app.listen(config.api.port, () => {

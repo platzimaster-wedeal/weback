@@ -9,7 +9,7 @@ module.exports = (postsService, filesService) => {
     return postsService.get(params)
   }
 
-  async function insert (body, {myFile, myAvatar}) {
+  async function insert (body, { myFile, myAvatar }) {
     const paths = [!myFile ? '' : myFile[0].path]
     const result = await filesService.uploadFile(paths)
 
@@ -20,7 +20,7 @@ module.exports = (postsService, filesService) => {
       }
     }
     console.log(body)
-    return  await postsService.insert(body) 
+    return await postsService.insert(body)
   }
 
   return {
