@@ -2,8 +2,7 @@
 
 const controller = require('./controller')
 
-const UsersService = require('../../../services/users')
-const AuthsService = require('../../../services/auths')
+const ProblemService = require('../../../services/problems')
 const FilesService = require('../../../services/files')
 
-module.exports = controller(new UsersService(), new AuthsService(), new FilesService())
+module.exports = controller(new ProblemService(),  new FilesService())
