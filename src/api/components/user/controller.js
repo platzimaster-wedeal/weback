@@ -16,14 +16,14 @@ module.exports = (usersService, authsService, filesService) => {
   }
 
   async function insert (body, {myFile, myAvatar}) {
-    const paths = [myFile[0].path, myAvatar[0].path]
+    const paths = [!myFile ? '' : myFile[0].path, !myAvatar ? '' : myAvatar[0].path]
     const data = await filesService.uploadFile(paths);
     
 
     body = {
       ...body,
-      file_url: data.myFile.secure_url,
-      myAvatar: data.myAvatar.secure_url
+      file_url: data.myFile,
+      myAvatar: data.myAvatar
     };
 
     const recordset = await usersService.insert(body)
