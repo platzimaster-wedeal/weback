@@ -18,7 +18,8 @@ class cloudinaryProvider {
         cloudinary.config(cloudConfig)
     }
 
-    async uploadFile(path) {
+    async uploadFile(path) { 
+        if(!path) return false
         try {
             const result = await cloudinary.uploader.upload(path)
             return result;

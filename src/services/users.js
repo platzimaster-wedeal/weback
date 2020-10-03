@@ -147,8 +147,6 @@ class UsersService {
     degree_title,
     degree_description,
     last_job_title
-
-
   }) {
     const cnx = await this.provider.getConnection()
     const request = await cnx.request()
