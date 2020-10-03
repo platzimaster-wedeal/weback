@@ -49,7 +49,7 @@ class UsersService {
     degree_description,
     last_job_title,
     myAvatar
-    //TODO: FALTA EL CAMPO DEL AVATAR
+    // TODO: FALTA EL CAMPO DEL AVATAR
   }) {
     const cnx = await this.provider.getConnection()
     const request = await cnx.request()
