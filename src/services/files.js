@@ -6,19 +6,22 @@ class FilesService {
     }
 
     async uploadFile (paths) {
-            try {
-                const result = await this.provider.uploadFile(paths[0])
-                const result1 = await this.provider.uploadFile(paths[1])
-                await fs.unlink(paths[0])
-                await fs.unlink(paths[1])
-                return {
-                    myFile: result,
-                    myAvatar: result1
-                }
-            } catch (error) {
-                console.log(error)
+        const path_urls = []
+        console.log(paths)
+        for(const path of paths) {
+            const newPath = await this.provider.uploadFile(path)
+            path_urls.push(newPath)
+            if(!path) {
                 return false
+            } else {
+                await fs.unlink(path)
             }
+        }
+        return {
+            myFile: !path_urls[0] ? '' : path_urls[0].secure_url,
+            myAvatar:!path_urls[1] ? '' : path_urls[1].secure_url
+        }
+
         
     }
 }

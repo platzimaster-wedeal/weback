@@ -1,28 +1,32 @@
 'use strict'
 
 const express = require('express')
+const config = require('../config')
+const path = require('path')
+const morgan = require('morgan')
+const multer = require('multer')
+
+// Utils
+const errors = require('../network/errors')
+
+//Components
 const user = require('./components/user/network')
 const login = require('./components/auth/network')
 const country = require('./components/country/network')
 const state = require('./components/state/network')
 const city = require('./components/city/network')
-const errors = require('../network/errors')
-const config = require('../config')
-const path = require('path')
-const morgan = require('morgan')
-const multer = require('multer')
+const post = require('./components/post/network')
+
+// Server settings
 const BASE_PATH = '/api'
 const API_VERSION = '/v1'
 const API_URL = `${BASE_PATH}${API_VERSION}`
-
-// Server settings
 const app = express()
 
 // Middlewares
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(morgan('dev'))
-
 const storage = multer.diskStorage({
   destination: path.join(__dirname, 'public/uploads'),
   filename: (req, file, cb) => {
@@ -44,6 +48,7 @@ app.use(`${API_URL}/auth`, login)
 app.use(`${API_URL}/countries`, country)
 app.use(`${API_URL}/countries`, state)
 app.use(`${API_URL}/countries`, city)
+app.use(`${API_URL}/posts`, post)
 app.use(errors)
 
 

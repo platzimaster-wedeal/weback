@@ -34,7 +34,6 @@ class PostsService {
   async insert ({
     content,
     file_url,
-    publication_date,
     status,
     id_user
   }) {
@@ -42,7 +41,6 @@ class PostsService {
     const request = await cnx.request()
     request.input('content', content)
     request.input('file_url', file_url)
-    request.input('publication_date', new Date(publication_date))
     request.input('status', status)
     request.input('id_user', id_user)
     const { recordset } = await request.query(
@@ -51,14 +49,12 @@ class PostsService {
         (
           content,
           file_url,
-          publication_date,
-          id_user,
+          id_user
         )
         VALUES
         (
           @content,
           @file_url,
-          @publication_date,
           @id_user
         )
 

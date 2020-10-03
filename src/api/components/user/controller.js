@@ -25,7 +25,6 @@ module.exports = (usersService, authsService, filesService) => {
       file_url: data.myFile.secure_url,
       myAvatar: data.myAvatar.secure_url
     };
-    console.log(body)
 
     const recordset = await usersService.insert(body)
 
