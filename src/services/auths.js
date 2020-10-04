@@ -41,9 +41,6 @@ class AuthsService {
           @password
         )
         
-        
-        
-
         SELECT @@ROWCOUNT AS [count]
       `
     )

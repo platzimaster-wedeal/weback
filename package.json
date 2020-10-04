@@ -5,6 +5,7 @@
   "main": "api/index.js",
   "scripts": {
     "start": "node src/api/index.js",
+    "start:pm": "pm2 start src/api/index.js",
     "dev": "nodemon src/api/index.js",
     "test": "jest --passWithNoTests",
     "test:coverage": "jest --coverage",
@@ -35,7 +36,8 @@
     "morgan": "^1.10.0",
     "mssql": "^6.2.2",
     "multer": "^1.4.2",
-    "nanoid": "^3.1.12"
+    "nanoid": "^3.1.12",
+    "pm2": "^4.5.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
