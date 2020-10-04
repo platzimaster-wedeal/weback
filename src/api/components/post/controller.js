@@ -11,15 +11,15 @@ module.exports = (postsService, filesService) => {
 
   async function insert (body, { myFile, myAvatar }) {
     /* const dataAvatar = await filesService.uploadFile(myAvatar[0].path); */
-    const dataMyFile = await filesService.uploadFiles(myFile);
+    const dataMyFile = await filesService.uploadFiles(myFile)
 
     console.log(dataMyFile)
 
-      body = {
-        ...body,
-        file_url: dataMyFile[0].secure_url
-      }
-    
+    body = {
+      ...body,
+      file_url: dataMyFile[0].secure_url
+    }
+
     console.log(body)
     return await postsService.insert(body)
   }

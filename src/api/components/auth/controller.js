@@ -17,7 +17,7 @@ module.exports = (authsService) => {
     const result = {
       id_user: recordset.id_user,
       id_user_employee: recordset.id_user_employee,
-      token_user: auth.sign(recordset),
+      token_user: auth.sign(recordset)
 
     }
     return result

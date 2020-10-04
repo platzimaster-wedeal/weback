@@ -14,7 +14,6 @@ module.exports = (applyToProblem, authsService) => {
   }
 
   async function insert (body) {
-
     body = {
       ...body
     }
@@ -23,7 +22,6 @@ module.exports = (applyToProblem, authsService) => {
     return recordset
   }
   async function update (id, body) {
-    
     body = {
       ...body
     }
