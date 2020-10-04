@@ -49,13 +49,15 @@ class PostsService {
         (
           content,
           file_url,
-          id_user
+          id_user,
+          type_post
         )
         VALUES
         (
           @content,
           @file_url,
-          @id_user
+          @id_user,
+          1
         )
 
         SELECT SCOPE_IDENTITY() AS id
