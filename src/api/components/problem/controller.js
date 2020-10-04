@@ -14,13 +14,12 @@ module.exports = (problemService, filesService) => {
   }
 
   async function insert (body, { myFile }) {
-    const paths = [!myFile ? '' : myFile[0].path]
-    const data = await filesService.uploadFile(paths)
+    const dataMyFile = await filesService.uploadFiles(myFile);
 
+    console.log(dataMyFile)
     body = {
       ...body,
-      file_url: data.myFile
-      /* myAvatar: data.myAvatar */
+      file_url: dataMyFile[0].secure_url
     }
 
     const recordset = await problemService.insert(body)

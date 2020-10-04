@@ -33,7 +33,6 @@ class UsersService {
 
       `
     )
-    console.log(recordset)
     return recordset[0] || {}
   }
 
