@@ -19,6 +19,7 @@ const city = require('./components/city/network')
 const post = require('./components/post/network')
 const problem = require('./components/problem/network')
 const applyProblem = require('./components/applyProblem/network')
+const comment = require('./components/comment/network')
 
 // Server settings
 const BASE_PATH = '/api'
@@ -30,7 +31,7 @@ const app = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(morgan('dev'))
-app.use(cors({origin: 'http://localhost:3000'}))
+app.use(cors({ origin: 'http://localhost:3000' }))
 const storage = multer.diskStorage({
   destination: path.join(__dirname, 'public/uploads'),
   filename: (req, file, cb) => {
@@ -50,11 +51,12 @@ app.use(multer({ storage }).fields([
 app.use(`${API_URL}/users`, user)
 app.use(`${API_URL}/auth`, login)
 app.use(`${API_URL}/countries`, country)
-app.use(`${API_URL}/state`, state)
-app.use(`${API_URL}/city`, city)
+app.use(`${API_URL}/states`, state)
+app.use(`${API_URL}/cities`, city)
 app.use(`${API_URL}/posts`, post)
 app.use(`${API_URL}/problems`, problem)
 app.use(`${API_URL}/applyProblem`, applyProblem)
+app.use(`${API_URL}/comments`, comment)
 app.use(errors)
 
 // Server initialization

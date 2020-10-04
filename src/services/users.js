@@ -147,7 +147,7 @@ class UsersService {
     id_language,
     file_url,
     degree_title,
-    degree_description,
+    degree_description
   }) {
     const cnx = await this.provider.getConnection()
     const request = await cnx.request()

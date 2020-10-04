@@ -48,9 +48,9 @@ class FilesService {
     const results = []
 
     for (const file of files) {
-      console.log(file);
-      const result  = await this.uploadFile(file.path);
-      results.push(result);
+      console.log(file)
+      const result = await this.uploadFile(file.path)
+      results.push(result)
     }
 
     return results

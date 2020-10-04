@@ -14,7 +14,7 @@ module.exports = (problemService, filesService) => {
   }
 
   async function insert (body, { myFile }) {
-    const dataMyFile = await filesService.uploadFiles(myFile);
+    const dataMyFile = await filesService.uploadFiles(myFile)
 
     console.log(dataMyFile)
     body = {
