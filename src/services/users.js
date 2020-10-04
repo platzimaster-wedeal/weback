@@ -23,9 +23,14 @@ class UsersService {
     request.input('id_user', id_user)
     const { recordset } = await request.query(
       `
+        
         SELECT *
-        FROM users WITH (NOLOCK)
-        WHERE id = @id_user
+        FROM users
+        INNER JOIN employees
+        ON users.id = employees.id_user
+        WHERE users.id = @id_user;
+
+
       `
     )
     console.log(recordset)
@@ -49,7 +54,6 @@ class UsersService {
     degree_description,
     last_job_title,
     myAvatar
-    // TODO: FALTA EL CAMPO DEL AVATAR
   }) {
     const cnx = await this.provider.getConnection()
     const request = await cnx.request()
@@ -67,7 +71,6 @@ class UsersService {
     request.input('file_url', file_url)
     request.input('degree_title', degree_title)
     request.input('degree_description', degree_description)
-    request.input('last_job_title', last_job_title)
     request.input('avatar', myAvatar)
     const { recordset } = await request.query(
       `
@@ -116,15 +119,15 @@ class UsersService {
 
         SET @id_employer = IDENT_CURRENT('employers')
 
-        INSERT INTO employees (id_user, id_work_area, last_job_title)
-        VALUES (@id_user, @id_work_area, @last_job_title)
+        INSERT INTO employees (id_user, id_work_area)
+        VALUES (@id_user, @id_work_area)
 
         SET @id_employee = IDENT_CURRENT('employees');
 
         INSERT INTO experiences (degree, file_url, description, id_employee)
         VALUES(@degree_title, @file_url, @degree_description, @id_employee)
 
-        SELECT @id_user AS id_user
+        SELECT @id_user AS id_user, @id_employee AS id_eployee, @id_employer AS id_epmloyer 
       `
     )
     return recordset[0] || {}
@@ -146,7 +149,6 @@ class UsersService {
     file_url,
     degree_title,
     degree_description,
-    last_job_title
   }) {
     const cnx = await this.provider.getConnection()
     const request = await cnx.request()
@@ -166,7 +168,6 @@ class UsersService {
     request.input('file_url', file_url)
     request.input('degree_title', degree_title)
     request.input('degree_description', degree_description)
-    request.input('last_job_title', last_job_title)
     const { recordset } = await request.query(
       `
         DECLARE @id_employee INT = 0;
@@ -190,7 +191,6 @@ class UsersService {
 
         UPDATE employees
         SET id_work_area      = @id_work_area,
-            last_job_title    = @last_job_title
         WHERE id_user         = @id_user
 
         SELECT TOP (1) @id_employee = id FROM employees WHERE id_user = @id_user

@@ -14,8 +14,13 @@ module.exports = (authsService) => {
     if (!areEquals) {
       throw error('Invalid information', 401)
     }
+    const result = {
+      id_user: recordset.id_user,
+      id_user_employee: recordset.id_user_employee,
+      token_user: auth.sign(recordset),
 
-    return auth.sign(recordset)
+    }
+    return result
   }
 
   async function insert ({ id_user, username, password }) {

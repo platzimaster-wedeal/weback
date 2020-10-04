@@ -61,7 +61,9 @@ class ProblemService {
     request.input('schedule', new Date(schedule))
     const { recordset } = await request.query(
             `
-            
+            DECLARE @id_problem INT = 0;
+            DECLARE @id_employer_job_offer INT = 0;
+
             INSERT INTO job_offers
             (
                 title,
@@ -90,9 +92,19 @@ class ProblemService {
                 @category,
                 @schedule
             )
-            SELECT SCOPE_IDENTITY() AS id
+
+            SET @id_problem = IDENT_CURRENT('job_offers')
+            
+            INSERT INTO employers_job_offers (id_job_offer, status)
+            VALUES (@id_problem, 'available')
+            
+            SET @id_employer_job_offer = IDENT_CURRENT('employers_job_offers')
+
+            SELECT @id_problem AS id_problem, @id_employer_job_offer AS id_employer_job_offer
+            
             `
     )
+    console.log(recordset)
     return recordset[0] || {}
   }
 

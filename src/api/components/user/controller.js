@@ -15,16 +15,15 @@ module.exports = (usersService, authsService, filesService) => {
     return usersService.get(params)
   }
 
-  async function insert (body, { myFile, myAvatar }) {
-    const paths = [!myFile ? '' : myFile[0].path, !myAvatar ? '' : myAvatar[0].path]
+  async function insert (body, { myAvatar }) {
+    const paths = [!myAvatar ? '' : myAvatar[0].path]
     const data = await filesService.uploadFile(paths)
-
+    console.log(data)
     body = {
       ...body,
       file_url: data.myFile,
       myAvatar: data.myAvatar
     }
-
     const recordset = await usersService.insert(body)
 
     if (recordset.id_user) {
