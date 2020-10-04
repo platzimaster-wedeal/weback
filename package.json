@@ -4,7 +4,7 @@
   "description": "Repositorio de BackEnd del proyecto WeDeal",
   "main": "api/index.js",
   "scripts": {
-    "start": "pm2 src/api/index.js",
+    "start": "pm2 start src/api/index.js",
     "dev": "nodemon src/api/index.js",
     "test": "jest --passWithNoTests",
     "test:coverage": "jest --coverage",
