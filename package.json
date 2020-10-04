@@ -5,7 +5,6 @@
   "main": "api/index.js",
   "scripts": {
     "start": "node src/api/index.js",
-    "start:pm": "pm2 start src/api/index.js",
     "dev": "nodemon src/api/index.js",
     "test": "jest --passWithNoTests",
     "test:coverage": "jest --coverage",

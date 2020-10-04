@@ -16,8 +16,8 @@ module.exports = (usersService, authsService, filesService) => {
   }
 
   async function insert (body, { myAvatar, myFile }) {
-    const dataAvatar = await filesService.uploadFile(myAvatar[0].path);
-    const dataMyFile = await filesService.uploadFiles(myFile);
+    const dataAvatar = await filesService.uploadFile(myAvatar[0].path)
+    const dataMyFile = await filesService.uploadFiles(myFile)
 
     /* const data = await filesService.uploadFile(paths) */
     console.log('data', dataAvatar, dataMyFile)
