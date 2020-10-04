@@ -15,15 +15,17 @@ module.exports = (usersService, authsService, filesService) => {
     return usersService.get(params)
   }
 
-  async function insert (body, { myAvatar }) {
-    const paths = [!myAvatar ? '' : myAvatar[0].path]
-    const data = await filesService.uploadFile(paths)
-    console.log(data)
+  async function insert (body, { myAvatar, myFile }) {
+    const dataAvatar = await filesService.uploadFile(myAvatar[0].path);
+    const dataMyFile = await filesService.uploadFiles(myFile);
+
+    /* const data = await filesService.uploadFile(paths) */
+    console.log('data', dataAvatar, dataMyFile)
     body = {
       ...body,
-      file_url: data.myFile,
-      myAvatar: data.myAvatar
+      myAvatar: dataAvatar.secure_url
     }
+    console.log('body', body)
     const recordset = await usersService.insert(body)
 
     if (recordset.id_user) {
@@ -33,6 +35,7 @@ module.exports = (usersService, authsService, filesService) => {
         username: body.username,
         password: encryptedPwd
       }
+      console.log(authData)
 
       await authsService.insert(authData)
     }
