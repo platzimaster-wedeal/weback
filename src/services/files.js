@@ -10,6 +10,7 @@ class FilesService {
     for (const path of paths) {
       const newPath = await this.provider.uploadFile(path)
       path_urls.push(newPath)
+      console.log(path)
       if (!path) {
         return false
       } else {

@@ -13,7 +13,7 @@ class AuthsService {
       `
         SELECT id_user, username, password
         FROM auths WITH (NOLOCK)
-        WHERE username = @username
+        WHERE username = @username 
       `
     )
     return recordset[0] || {}
@@ -27,6 +27,7 @@ class AuthsService {
     request.input('password', password)
     const { recordset } = await request.query(
       `
+
         INSERT INTO auths
         (
           id_user,
@@ -39,10 +40,14 @@ class AuthsService {
           @username,
           @password
         )
+        
+        
+        
 
         SELECT @@ROWCOUNT AS [count]
       `
     )
+    console.log(recordset)
     return recordset[0] || {}
   }
 

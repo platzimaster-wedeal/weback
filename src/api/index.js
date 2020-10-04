@@ -18,6 +18,7 @@ const state = require('./components/state/network')
 const city = require('./components/city/network')
 const post = require('./components/post/network')
 const problem = require('./components/problem/network')
+const applyProblem = require('./components/applyProblem/network')
 
 // Server settings
 const BASE_PATH = '/api'
@@ -53,6 +54,7 @@ app.use(`${API_URL}/countries`, state)
 app.use(`${API_URL}/countries`, city)
 app.use(`${API_URL}/posts`, post)
 app.use(`${API_URL}/problems`, problem)
+app.use(`${API_URL}/applyProblem`, applyProblem)
 app.use(errors)
 
 // Server initialization
