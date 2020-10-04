@@ -1,8 +1,8 @@
 {
   "name": "weback",
-  "version": "1.0.1",
+  "version": "1.2.0",
   "description": "Repositorio de BackEnd del proyecto WeDeal",
-  "main": "api/index.js",
+  "main": "src/api/index.js",
   "scripts": {
     "start": "node src/api/index.js",
     "dev": "nodemon src/api/index.js",
