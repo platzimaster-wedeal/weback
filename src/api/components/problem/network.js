@@ -9,7 +9,7 @@ const router = express.Router()
 router.get('/', secure('list'), list)
 router.get('/:id', secure('get'), get)
 router.post('/', secure('insert'), insert)
-router.put('/:id', secure('update'), update)
+router.put('/:id',  update)
 router.delete('/:id', secure('remove'), remove)
 
 function list (req, res, next) {
