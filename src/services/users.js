@@ -189,7 +189,7 @@ class UsersService {
         WHERE id_user         = @id_user
 
         UPDATE employees
-        SET id_work_area      = @id_work_area,
+        SET id_work_area      = @id_work_area
         WHERE id_user         = @id_user
 
         SELECT TOP (1) @id_employee = id FROM employees WHERE id_user = @id_user
@@ -208,7 +208,6 @@ class UsersService {
   }
 
   async remove ({ id_user }) {
-    try {
       const cnx = await this.provider.getConnection()
       const request = await cnx.request()
       request.input('id_user', id_user)
@@ -220,10 +219,7 @@ class UsersService {
         `
       )
       return recordset[0] || {}
-    } catch (error) {
-      console.log('Error seguramente en el controller', error)
-      return false
-    }
+    
   }
 }
 
