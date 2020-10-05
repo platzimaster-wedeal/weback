@@ -12,7 +12,6 @@ router.get('/:id_user_to/followers', secure('get'), getUserFollowers)
 router.post('/:id_user_from/follow/:id_user_to', secure('insert'), follow)
 router.delete('/:id_user_from/follows/:id_user_to', secure('remove'), unFollow)
 
-
 function getUserFollowers (req, res, next) {
   controller.getUserFollowers(req.params)
     .then(result => {
