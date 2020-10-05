@@ -27,12 +27,11 @@ module.exports = (problemService, filesService) => {
     return recordset
   }
   async function update (id, body, { myFile, myAvatar }) {
-    const paths = [myFile[0].path, myAvatar[0].path]
-    const data = await filesService.uploadFile(paths)
+    const dataMyFile = await filesService.uploadFiles(myFile)
+
     body = {
       ...body,
-      file_url: data.myFile.secure_url,
-      myAvatar: data.myAvatar.secure_url
+      file_url: dataMyFile[0].secure_url
     }
     return await problemService.update(id, body)
   }
@@ -40,10 +39,10 @@ module.exports = (problemService, filesService) => {
     const params = {
       id_problem: id
     }
-    const recordset = await authsService.remove(params)
-    if (recordset.count > 0) {
+    const recordset = await problemService.remove(params)
+    /* if (recordset.count > 0) {
       await problemService.remove(params)
-    }
+    } */
     return recordset
   }
 

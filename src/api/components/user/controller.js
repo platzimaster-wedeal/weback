@@ -15,17 +15,14 @@ module.exports = (usersService, authsService, filesService) => {
     return usersService.get(params)
   }
 
-  async function insert (body, { myAvatar, myFile }) {
+  async function insert (body, { myAvatar }) {
     const dataAvatar = await filesService.uploadFile(myAvatar[0].path)
-    const dataMyFile = await filesService.uploadFiles(myFile)
 
-    /* const data = await filesService.uploadFile(paths) */
-    console.log('data', dataAvatar, dataMyFile)
     body = {
       ...body,
       myAvatar: dataAvatar.secure_url
     }
-    console.log('body', body)
+    console.log(body)
     const recordset = await usersService.insert(body)
 
     if (recordset.id_user) {
@@ -43,13 +40,12 @@ module.exports = (usersService, authsService, filesService) => {
     return recordset
   }
 
-  async function update (id, body, { myFile, myAvatar }) {
-    const paths = [myFile[0].path, myAvatar[0].path]
-    const data = await filesService.uploadFile(paths)
+  async function update (id, body, {  myAvatar }) {
+    const dataAvatar = await filesService.uploadFile(myAvatar[0].path)
+
     body = {
       ...body,
-      file_url: data.myFile.secure_url,
-      myAvatar: data.myAvatar.secure_url
+      myAvatar: dataAvatar.secure_url
     }
     return await usersService.update(id, body)
   }
@@ -58,9 +54,10 @@ module.exports = (usersService, authsService, filesService) => {
     const params = {
       id_user: id
     }
-    const recordset = await authsService.remove(params)
+    const recordset = await usersService.remove(params)
     if (recordset.count > 0) {
-      await usersService.remove(params)
+      await authsService.remove(params)
+      
     }
     return recordset
   }

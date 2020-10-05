@@ -85,7 +85,6 @@ class ApplyToProblme {
   }
 
   async remove ({ id_problem }) {
-    try {
       const cnx = await this.provider.getConnection()
       const request = await cnx.request()
       request.input('id_problem', id_problem)
@@ -97,10 +96,7 @@ class ApplyToProblme {
                 `
       )
       return recordset[0] || {}
-    } catch (error) {
-      console.log('Error seguramente en el controller', error)
-      return false
-    }
+    
   }
 }
 
