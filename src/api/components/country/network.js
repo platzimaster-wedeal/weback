@@ -8,8 +8,8 @@ const secure = require('./secure')
 
 const router = express.Router()
 
-router.get('/', secure('list'), list)
-router.get('/:id', secure('get'), get)
+router.get('/', list)
+router.get('/:id', get)
 
 function list (req, res, next) {
   controller.list()
