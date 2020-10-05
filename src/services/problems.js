@@ -139,16 +139,16 @@ class ProblemService {
     const { recordset } = await request.query(
             `
             UPDATE job_offers
-            SET title               = @title
-                employer_name       = @employer_name
-                requeriments        = @requeriments
-                modality            = @modality
-                salary_range1       = @salary_range1
-                salary_range2       = @salary_range2
-                short_description   = @short_description
-                long_description    = @long_description
-                file_url            = @file_url
-                category            = @category
+            SET title               = @title,
+                employer_name       = @employer_name,
+                requeriments        = @requeriments,
+                modality            = @modality,
+                salary_range1       = @salary_range1,
+                salary_range2       = @salary_range2,
+                short_description   = @short_description,
+                long_description    = @long_description,
+                file_url            = @file_url,
+                category            = @category,
                 schedule            = @schedule
             WHERE id = @id_problem
 
@@ -160,7 +160,6 @@ class ProblemService {
   }
 
   async remove ({ id_problem }) {
-    try {
       const cnx = await this.provider.getConnection()
       const request = await cnx.request()
       request.input('id_problem', id_problem)
@@ -172,10 +171,7 @@ class ProblemService {
             `
       )
       return recordset[0] || {}
-    } catch (error) {
-      console.log('Error seguramente en el controller', error)
-      return false
-    }
+    
   }
 }
 
