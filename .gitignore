@@ -1,9 +1,5 @@
-
 # Images
-.jpg
-.png
-.svg
-public/uploads
+src/public/uploads
 
 # Logs
 logs

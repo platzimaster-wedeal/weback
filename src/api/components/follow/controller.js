@@ -3,7 +3,6 @@
 const { param } = require('./network')
 
 module.exports = (followService) => {
-
   async function getUserFollowers (params) {
     return followService.getUserFollowers(params)
   }
