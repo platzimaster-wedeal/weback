@@ -20,7 +20,9 @@ const post = require('./components/post/network')
 const problem = require('./components/problem/network')
 const applyProblem = require('./components/applyProblem/network')
 const comment = require('./components/comment/network')
+const score = require('./components/score/network')
 const follow = require('./components/follow/network')
+const like = require('./components/like/network')
 
 // Server settings
 const BASE_PATH = '/api'
@@ -59,6 +61,9 @@ app.use(`${API_URL}/problems`, problem)
 app.use(`${API_URL}/applyProblem`, applyProblem)
 app.use(`${API_URL}/comments`, comment)
 app.use(`${API_URL}/follows`, follow)
+app.use(`${API_URL}/likes`, like)
+app.use(`${API_URL}/scores`, score)
+
 app.use(errors)
 
 // Server initialization
