@@ -23,14 +23,28 @@ class UsersService {
     request.input('id_user', id_user)
     const { recordset } = await request.query(
       `
-        
-        SELECT *
-        FROM users
-        INNER JOIN employees
-        ON users.id = employees.id_user
-        WHERE users.id = @id_user;
-
-
+        SELECT  A.id,
+                A.first_name,
+                A.last_name,
+                C.username,
+                A.email,
+                A.avatar,
+                A.date_of_birth,
+                A.telephone,
+                A.id_city,
+                B.name,
+                A.id_work_area,
+                D.title,
+                A.employee,
+                A.employeer,
+                A.latitude,
+                A.longitude,
+                A.description
+        FROM [users] AS A WITH (NOLOCK)
+        INNER JOIN [cities] AS B WITH (NOLOCK) ON (A.id_city = B.id)
+        INNER JOIN [auths] AS C WITH (NOLOCK) ON (A.id = C.id_user)
+        INNER JOIN [work_areas] AS D WITH (NOLOCK) ON (A.id_work_area = D.id)
+        WHERE A.id = @id_user
       `
     )
     return recordset[0] || {}
@@ -208,18 +222,17 @@ class UsersService {
   }
 
   async remove ({ id_user }) {
-      const cnx = await this.provider.getConnection()
-      const request = await cnx.request()
-      request.input('id_user', id_user)
-      const { recordset } = await request.query(
+    const cnx = await this.provider.getConnection()
+    const request = await cnx.request()
+    request.input('id_user', id_user)
+    const { recordset } = await request.query(
         `
           DELETE FROM users
           WHERE id = @id_user
           SELECT @@ROWCOUNT AS [count]
         `
-      )
-      return recordset[0] || {}
-    
+    )
+    return recordset[0] || {}
   }
 }
 

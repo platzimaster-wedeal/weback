@@ -33,6 +33,7 @@ class ProblemService {
   }
 
   async insert ({
+    id_employer,
     title,
     employer_name,
     requeriments,
@@ -48,6 +49,7 @@ class ProblemService {
   }) {
     const cnx = await this.provider.getConnection()
     const request = await cnx.request()
+    request.input('id_employer', id_employer)
     request.input('title', title)
     request.input('employer_name', employer_name)
     request.input('requeriments', requeriments)
@@ -95,8 +97,8 @@ class ProblemService {
 
             SET @id_problem = IDENT_CURRENT('job_offers')
             
-            INSERT INTO employers_job_offers (id_job_offer, status)
-            VALUES (@id_problem, 'available')
+            INSERT INTO employers_job_offers (id_job_offer, id_employer status)
+            VALUES (@id_problem, @id_employer, 'available')
             
             SET @id_employer_job_offer = IDENT_CURRENT('employers_job_offers')
 
@@ -160,18 +162,17 @@ class ProblemService {
   }
 
   async remove ({ id_problem }) {
-      const cnx = await this.provider.getConnection()
-      const request = await cnx.request()
-      request.input('id_problem', id_problem)
-      const { recordset } = await request.query(
+    const cnx = await this.provider.getConnection()
+    const request = await cnx.request()
+    request.input('id_problem', id_problem)
+    const { recordset } = await request.query(
             `
               DELETE FROM job_offers
               WHERE id = @id_problem
               SELECT @@ROWCOUNT AS [count]
             `
-      )
-      return recordset[0] || {}
-    
+    )
+    return recordset[0] || {}
   }
 }
 

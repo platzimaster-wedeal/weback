@@ -40,7 +40,7 @@ module.exports = (usersService, authsService, filesService) => {
     return recordset
   }
 
-  async function update (id, body, {  myAvatar }) {
+  async function update (id, body, { myAvatar }) {
     const dataAvatar = await filesService.uploadFile(myAvatar[0].path)
 
     body = {
@@ -57,7 +57,6 @@ module.exports = (usersService, authsService, filesService) => {
     const recordset = await usersService.remove(params)
     if (recordset.count > 0) {
       await authsService.remove(params)
-      
     }
     return recordset
   }
