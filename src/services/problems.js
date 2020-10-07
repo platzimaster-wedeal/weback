@@ -10,7 +10,7 @@ class ProblemService {
     const request = await cnx.request()
     const { recordset } = await request.query(
             `
-            SELECT TOP(100) A.id,
+            SELECT TOP(60) A.id,
                    A.title,
                    A.short_description,
                    A.long_description,
