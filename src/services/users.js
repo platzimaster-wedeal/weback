@@ -36,19 +36,19 @@ class UsersService {
       a.employee,
       a.employeer,
       c.id AS id_employee,
-      e.id AS id_employer,
+      d.id AS id_employer,
       a.latitude,
       a.longitude,
       a.description,
-(SELECT ISNULL(AVG(qualification), 0)
-FROM scores WITH (NOLOCK)
-WHERE id_employee = c.id) AS qualification_average
-FROM [users] AS a WITH (NOLOCK)
-FULL OUTER JOIN [auths] AS b WITH (NOLOCK) ON (a.id = b.id_user)
-FULL OUTER JOIN [employees] AS c WITH (NOLOCK) ON (b.id_user = c.id_user)
-FULL OUTER JOIN [employers] AS d WITH (NOLOCK) ON (c.id_user = d.id_user)
-FULL OUTER JOIN [work_areas] AS e WITH (NOLOCK) ON (a.id_work_area = e.id)
-WHERE a.id = @id_user
+      (SELECT ISNULL(AVG(qualification), 0)
+      FROM scores WITH (NOLOCK)
+      WHERE id_employee = c.id) AS qualification_average
+      FROM [users] AS a WITH (NOLOCK)
+      FULL OUTER JOIN [auths] AS b WITH (NOLOCK) ON (a.id = b.id_user)
+      FULL OUTER JOIN [employees] AS c WITH (NOLOCK) ON (b.id_user = c.id_user)
+      FULL OUTER JOIN [employers] AS d WITH (NOLOCK) ON (c.id_user = d.id_user)
+      FULL OUTER JOIN [work_areas] AS e WITH (NOLOCK) ON (a.id_work_area = e.id)
+      WHERE a.id = @id_user
       `
     )
     return recordset[0] || {}
