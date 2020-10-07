@@ -62,7 +62,8 @@ class ProblemService {
                    B.id_employer AS id_employer,
                    D.avatar AS user_avatar,
                    A.guid,
-                   A.created_at
+                   A.created_at,
+                   D.id AS id_user
             FROM job_offers AS A WITH (NOLOCK)
             INNER JOIN employers_job_offers AS B WITH (NOLOCK) ON (A.id = B.id_job_offer)
             INNER JOIN employers AS C WITH (NOLOCK) ON (B.id_employer = C.id)
