@@ -23,32 +23,32 @@ class UsersService {
     request.input('id_user', id_user)
     const { recordset } = await request.query(
       `
-        SELECT  a.id AS id_user,
-                a.first_name,
-                a.last_name,
-                b.username,
-                a.email,
-                a.avatar,
-                a.date_of_birth,
-                a.telephone,
-                a.id_work_area,
-                e.title,
-                a.employee,
-                a.employeer,
-                c.id AS id_employee,
-                e.id AS id_employer,
-                a.latitude,
-                a.longitude,
-                a.description,
-        (SELECT ISNULL(AVG(qualification), 0)
-        FROM scores WITH (NOLOCK)
-        WHERE id_employee = c.id) AS qualification_average
-        FROM [users] AS a WITH (NOLOCK)
-        INNER JOIN [auths] AS b WITH (NOLOCK) ON (a.id = b.id_user)
-        INNER JOIN [employees] AS c WITH (NOLOCK) ON (b.id_user = c.id_user)
-        INNER JOIN [employers] AS d WITH (NOLOCK) ON (c.id_user = d.id_user)
-        INNER JOIN [work_areas] AS e WITH (NOLOCK) ON (a.id_work_area = e.id)
-        WHERE a.id = @id_user
+      SELECT  a.id AS id_user,
+      a.first_name,
+      a.last_name,
+      b.username,
+      a.email,
+      a.avatar,
+      a.date_of_birth,
+      a.telephone,
+      a.id_work_area,
+      e.title,
+      a.employee,
+      a.employeer,
+      c.id AS id_employee,
+      e.id AS id_employer,
+      a.latitude,
+      a.longitude,
+      a.description,
+(SELECT ISNULL(AVG(qualification), 0)
+FROM scores WITH (NOLOCK)
+WHERE id_employee = c.id) AS qualification_average
+FROM [users] AS a WITH (NOLOCK)
+FULL OUTER JOIN [auths] AS b WITH (NOLOCK) ON (a.id = b.id_user)
+FULL OUTER JOIN [employees] AS c WITH (NOLOCK) ON (b.id_user = c.id_user)
+FULL OUTER JOIN [employers] AS d WITH (NOLOCK) ON (c.id_user = d.id_user)
+FULL OUTER JOIN [work_areas] AS e WITH (NOLOCK) ON (a.id_work_area = e.id)
+WHERE a.id = @id_user
       `
     )
     return recordset[0] || {}
