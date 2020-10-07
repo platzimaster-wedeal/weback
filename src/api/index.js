@@ -36,7 +36,7 @@ const app = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(morgan('dev'))
-app.use(cors({ origin: 'https://wedeal.vercel.app/' }))
+app.use(cors({ origin: 'https://wedeal.vercel.app' }))
 const storage = multer.diskStorage({
   destination: path.join(__dirname, 'public/uploads'),
   filename: (req, file, cb) => {
