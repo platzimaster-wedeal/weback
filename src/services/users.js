@@ -359,9 +359,59 @@ class UsersService {
     request.input('id_user', id_user)
     const { recordset } = await request.query(
       `
-        SELECT *
+        IF OBJECT_ID(N'tempdb..#tmp_employers_connections') IS NOT NULL
+        BEGIN
+          DROP TABLE #tmp_employers_connections
+        END
+
+        IF OBJECT_ID(N'tempdb..#tmp_employees_connections') IS NOT NULL
+        BEGIN
+          DROP TABLE #tmp_employees_connections
+        END
+
+        IF OBJECT_ID(N'tempdb..#tmp_users_connections') IS NOT NULL
+        BEGIN
+          DROP TABLE #tmp_users_connections
+        END
+
+        CREATE TABLE #tmp_users_connections
+        (
+          id_user INT NOT NULL DEFAULT 0,
+          first_name VARCHAR(40) NOT NULL DEFAULT '',
+          last_name VARCHAR(40) NOT NULL DEFAULT '',
+          avatar VARCHAR(MAX) NOT NULL DEFAULT 'https://imgurl.me/images/2020/09/11/profilededaultbb7053428141edf1.png'
+        );
+
+        SELECT DISTINCT d.id_employer
+        INTO #tmp_employers_connections
         FROM [users] AS a WITH (NOLOCK)
+        INNER JOIN [employees] AS b WITH (NOLOCK) ON (a.id = b.id_user)
+        INNER JOIN [postulations] AS c WITH (NOLOCK) ON (b.id = c.id_employee)
+        INNER JOIN [employers_job_offers] AS d WITH (NOLOCK) ON (c.id_employers_job_offer = d.id)
         WHERE a.id = @id_user
+
+        SELECT DISTINCT d.id_employee
+        INTO #tmp_employees_connections
+        FROM [users] AS a WITH (NOLOCK)
+        INNER JOIN [employers] AS b WITH (NOLOCK) ON (a.id = b.id_user)
+        INNER JOIN [employers_job_offers] AS c WITH (NOLOCK) ON (b.id = c.id_employer)
+        INNER JOIN [postulations] AS d WITH (NOLOCK) ON (c.id = d.id_employers_job_offer)
+        WHERE a.id = @id_user
+
+        INSERT INTO #tmp_users_connections (id_user, first_name, last_name, avatar)
+        SELECT c.id AS id_user, c.first_name, c.last_name, c.avatar
+        FROM #tmp_employers_connections AS a WITH (NOLOCK)
+        INNER JOIN [employers] AS b WITH (NOLOCK) ON (a.id_employer = b.id)
+        INNER JOIN [users] AS c WITH (NOLOCK) ON (b.id_user = c.id)
+
+        INSERT INTO #tmp_users_connections (id_user, first_name, last_name, avatar)
+        SELECT c.id, c.first_name, c.last_name, c.avatar
+        FROM #tmp_employees_connections AS a WITH (NOLOCK)
+        INNER JOIN [employees] AS b WITH (NOLOCK) ON (a.id_employee = b.id)
+        INNER JOIN [users] AS c WITH (NOLOCK) ON (b.id_user = c.id)
+
+        SELECT DISTINCT id_user, first_name, last_name, avatar
+        FROM #tmp_users_connections
       `
     )
 
