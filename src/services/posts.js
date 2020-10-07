@@ -11,32 +11,37 @@ class PostsService {
     const { recordset } = await request.query(
       `
         
-        SELECT A.id,
+      SELECT TOP(60) A.id,
+             A.title,
+             A.content,
+             A.file_url,
+             A.type_post,
+             A.status,
+             B.id AS id_likes,
+             B.content AS comment_content,
+             B.status AS comment_status,
+             B.publication_date AS comment_createdAt,
+             A.publication_date , COUNT (*) AS total_likes,
+             D.id AS id_user,
+             D.first_name AS user_firstname
+      FROM posts AS A WITH (NOLOCK)
+      FULL OUTER JOIN comments AS B ON(B.id_post = A.id)
+      FULL OUTER JOIN user_likes AS C ON(C.id_post = A.id)
+      FULL OUTER JOIN users AS D ON (D.id = A.id_user)
+      GROUP BY A.id,
                A.title,
                A.content,
                A.file_url,
                A.type_post,
                A.status,
-               B.id AS id_likes,
-               B.content AS comment_content,
-               B.status AS comment_status,
-               B.publication_date AS comment_createdAt,
-               A.publication_date , COUNT (*) AS total_likes
-        FROM posts AS A WITH (NOLOCK)
-        FULL OUTER JOIN comments AS B ON(B.id_post = A.id)
-        FULL OUTER JOIN user_likes AS C ON(C.id_post = A.id)
-        GROUP BY A.id,
-                 A.title,
-                 A.content,
-                 A.file_url,
-                 A.type_post,
-                 A.status,
-                 B.content,
-                 B.status ,
-                 B.id,
-                 B.publication_date,
-                 A.publication_date
-        ORDER BY A.publication_date DESC
+               B.content,
+               B.status ,
+               B.id,
+               B.publication_date,
+               A.publication_date,
+               D.id,
+               D.first_name
+ORDER BY A.publication_date DESC
       `
     )
     return recordset || []

@@ -15,7 +15,8 @@ const {
   MSSQL_PASSWORD,
   MSSQL_DATABASE,
   MSSQL_OPTIONS_ENCRYPTED,
-  MSSQL_OPTIONS_ENABLE_ARITH_ABORT
+  MSSQL_OPTIONS_ENABLE_ARITH_ABORT,
+  MSSQL_APP_NAME
 } = process.env
 
 assert(PORT, 'POST is required')
@@ -37,7 +38,8 @@ module.exports = {
     database: MSSQL_DATABASE,
     options: {
       encrypted: MSSQL_OPTIONS_ENCRYPTED,
-      enableArithAbort: Boolean(MSSQL_OPTIONS_ENABLE_ARITH_ABORT)
+      enableArithAbort: Boolean(MSSQL_OPTIONS_ENABLE_ARITH_ABORT),
+      appName: MSSQL_APP_NAME
     }
   }
 }

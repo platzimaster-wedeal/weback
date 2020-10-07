@@ -73,6 +73,15 @@ module.exports = (usersService, authsService, filesService) => {
     return recordset
   }
 
+  async function getUserLanguages(params) {
+    const recordset = await usersService.getUserLanguages(params)
+    return recordset
+  }
+
+  async function getConnections(params) {
+    const recordSet = await usersService.getConnections(params);
+    return recordSet;
+  }
 
   return {
     list,
@@ -81,6 +90,8 @@ module.exports = (usersService, authsService, filesService) => {
     update,
     remove,
     getPostulations,
-    getProblems
+    getProblems,
+    getUserLanguages,
+    getConnections,
   }
 }

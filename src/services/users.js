@@ -40,7 +40,7 @@ class UsersService {
                 a.latitude,
                 a.longitude,
                 a.description,
-        (SELECT ISNULL(AVG(qualification), 0) 
+        (SELECT ISNULL(AVG(qualification), 0)
         FROM scores WITH (NOLOCK)
         WHERE id_employee = c.id) AS qualification_average
         FROM [users] AS a WITH (NOLOCK)
@@ -48,7 +48,7 @@ class UsersService {
         INNER JOIN [employees] AS c WITH (NOLOCK) ON (b.id_user = c.id_user)
         INNER JOIN [employers] AS d WITH (NOLOCK) ON (c.id_user = d.id_user)
         INNER JOIN [work_areas] AS e WITH (NOLOCK) ON (a.id_work_area = e.id)
-        WHERE a.id = 988
+        WHERE a.id = @id_user
       `
     )
     return recordset[0] || {}
@@ -105,7 +105,6 @@ class UsersService {
           employee,
           employeer,
           avatar
-          
         )
         VALUES
         (
@@ -119,7 +118,6 @@ class UsersService {
           @employee,
           @employeer,
           @avatar
-          
         )
 
         SET @id_user = IDENT_CURRENT('users')
@@ -205,13 +203,18 @@ class UsersService {
 
         SELECT TOP (1) @id_employee = id FROM employees WHERE id_user = @id_user
 
-        UPDATE experiences
-        SET degree          = @degree_title,
-            file_url        = @file_url,
-            description     = @degree_description
-        WHERE id_employee   = @id_employee
-
-
+        INSERT INTO experiences
+        (
+            degree,
+            file_url,
+            description
+        )
+        VALUES
+        (
+            @degree_title,
+            @file_url,
+            @degree_description
+        )
         SELECT @@ROWCOUNT AS [count]
       `
     )
@@ -237,14 +240,15 @@ class UsersService {
     const request = await cnx.request()
     request.input('id_employee', id_employee)
     const {recordset} = await request.query(
-
       `
-      
-
-
+      SELECT  a.id as id_user_language,
+              a.id_language,
+              b.acronym,
+              b.language
+      FROM [users_languages] AS a WITH (NOLOCK)
+      INNER JOIN [languages] AS b ON (a.id_language = b.id)
+      WHERE id_user = qid_employee
       `
-
-
     )
 
     return recordset[0] || {}
@@ -256,33 +260,66 @@ class UsersService {
     const {recordset} = await request.query(
 
       `
-      
-      SELECT  a.id_user,
-              a.id AS id_employer,
-              b.status,
-              c.employer_name,
-              c.modality,
-              c.salary_range1,
-              c.salary_range2,
-              c.category,
-              c.title,
-              c.file_url,
-              c.requeriments,
-              c.long_description,
-              c.short_description,
-              c.schedule,
-              c.created_at,
-              c.guid
-      FROM [employers] AS a WITH (NOLOCK)
-      INNER JOIN [employers_job_offers] AS b WITH (NOLOCK) ON (a.id = b.id_employer)
-      INNER JOIN [job_offers] AS c WITH (NOLOCK) ON (b.id_job_offer = c.id)
-      WHERE a.id = @id_employer
+        SELECT  a.id_user,
+                a.id AS id_employer,
+                b.status,
+                c.employer_name,
+                c.modality,
+                c.salary_range1,
+                c.salary_range2,
+                c.category,
+                c.title,
+                c.file_url,
+                c.requeriments,
+                c.long_description,
+                c.short_description,
+                c.schedule,
+                c.created_at,
+                c.guid
+        FROM [employers] AS a WITH (NOLOCK)
+        INNER JOIN [employers_job_offers] AS b WITH (NOLOCK) ON (a.id = b.id_employer)
+        INNER JOIN [job_offers] AS c WITH (NOLOCK) ON (b.id_job_offer = c.id)
+        WHERE a.id = @id_employer
       `
     )
 
     return recordset || {}
   }
 
+  async getUserLanguages({id_user}) {
+    const cnx =  await this.provider.getConnection()
+    const request = await cnx.request()
+    request.input('id_user', id_user)
+    const {recordset} = await request.query(
+
+      `
+        SELECT a.id as id_user_language,
+          a.id_language,
+          b.acronym,
+          b.language
+        FROM [users_languages] AS a WITH (NOLOCK)
+        INNER JOIN [languages] AS b ON (a.id_language = b.id)
+        WHERE id_user = @id_user
+      `
+    )
+
+    return recordset || {}
+  }
+
+  async getConnections({ id_user }) {
+    const cnx =  await this.provider.getConnection()
+    const request = await cnx.request()
+    request.input('id_user', id_user)
+    const { recordset } = await request.query(
+      `
+        SELECT *
+        FROM [users] AS a WITH (NOLOCK)
+        WHERE a.id = @id_user
+      `
+    )
+
+    return recordset || {}
+  }
 }
 
 module.exports = UsersService
