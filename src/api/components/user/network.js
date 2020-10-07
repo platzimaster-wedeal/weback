@@ -15,8 +15,16 @@ router.put('/:id', secure('update'), update)
 router.delete('/:id', secure('remove'), remove)
 router.get('/problems/:id_employer/getProblems', getProblems)
 router.get('/postulations/:id_user/getPostulations', getPostulations)
+router.get('/languages/:id_user/getLanguages', getUserLanguages)
+router.get('/connections/:id_user', getConnections)
 
-
+function getConnections(req, res, next) {
+  controller.getConenctions(req.params)
+  .then(list => {
+    response.success(req, res, list, 200);
+  })
+  .catch(next);
+}
 
 function getPostulations(req, res,next) {
   controller.getPostulations(req.params)
@@ -28,6 +36,14 @@ function getPostulations(req, res,next) {
 
 function getProblems(req, res, next) {
   controller.getProblems(req.params)
+  .then(list => {
+    response.success(req, res, list, 200)
+  })
+  .catch(next)
+}
+
+function getUserLanguages(req, res, next) {
+  controller.getUserLanguages(req.params)
   .then(list => {
     response.success(req, res, list, 200)
   })
