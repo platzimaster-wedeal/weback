@@ -41,7 +41,6 @@ module.exports = (usersService, authsService, filesService) => {
   }
 
   async function update (id, body) {
-    console.log(body)
     return await usersService.update(id, body)
   }
   async function patch (id, { myAvatar }) {
