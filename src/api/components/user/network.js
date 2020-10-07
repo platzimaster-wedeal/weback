@@ -13,6 +13,26 @@ router.get('/:id', secure('get'), get)
 router.post('/', secure('insert'), insert)
 router.put('/:id', secure('update'), update)
 router.delete('/:id', secure('remove'), remove)
+router.get('/problems/:id_employer/getProblems', getProblems)
+router.get('/postulations/:id_user/getPostulations', getPostulations)
+
+
+
+function getPostulations(req, res,next) {
+  controller.getPostulations(req.params)
+  .then(list => {
+    response.success(req, res, list, 200)
+  })
+  .catch(next)
+}
+
+function getProblems(req, res, next) {
+  controller.getProblems(req.params)
+  .then(list => {
+    response.success(req, res, list, 200)
+  })
+  .catch(next)
+}
 
 function list (req, res, next) {
   controller.list()

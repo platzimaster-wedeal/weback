@@ -23,28 +23,32 @@ class UsersService {
     request.input('id_user', id_user)
     const { recordset } = await request.query(
       `
-        SELECT  A.id,
-                A.first_name,
-                A.last_name,
-                C.username,
-                A.email,
-                A.avatar,
-                A.date_of_birth,
-                A.telephone,
-                A.id_city,
-                B.name,
-                A.id_work_area,
-                D.title,
-                A.employee,
-                A.employeer,
-                A.latitude,
-                A.longitude,
-                A.description
-        FROM [users] AS A WITH (NOLOCK)
-        INNER JOIN [cities] AS B WITH (NOLOCK) ON (A.id_city = B.id)
-        INNER JOIN [auths] AS C WITH (NOLOCK) ON (A.id = C.id_user)
-        INNER JOIN [work_areas] AS D WITH (NOLOCK) ON (A.id_work_area = D.id)
-        WHERE A.id = @id_user
+        SELECT  a.id AS id_user,
+                a.first_name,
+                a.last_name,
+                b.username,
+                a.email,
+                a.avatar,
+                a.date_of_birth,
+                a.telephone,
+                a.id_work_area,
+                e.title,
+                a.employee,
+                a.employeer,
+                c.id AS id_employee,
+                e.id AS id_employer,
+                a.latitude,
+                a.longitude,
+                a.description,
+        (SELECT ISNULL(AVG(qualification), 0) 
+        FROM scores WITH (NOLOCK)
+        WHERE id_employee = c.id) AS qualification_average
+        FROM [users] AS a WITH (NOLOCK)
+        INNER JOIN [auths] AS b WITH (NOLOCK) ON (a.id = b.id_user)
+        INNER JOIN [employees] AS c WITH (NOLOCK) ON (b.id_user = c.id_user)
+        INNER JOIN [employers] AS d WITH (NOLOCK) ON (c.id_user = d.id_user)
+        INNER JOIN [work_areas] AS e WITH (NOLOCK) ON (a.id_work_area = e.id)
+        WHERE a.id = 988
       `
     )
     return recordset[0] || {}
@@ -56,7 +60,6 @@ class UsersService {
     email,
     date_of_birth,
     telephone,
-    id_city,
     description,
     id_work_area,
     employee,
@@ -75,7 +78,6 @@ class UsersService {
     request.input('email', email)
     request.input('date_of_birth', new Date(date_of_birth))
     request.input('telephone', telephone)
-    request.input('id_city', id_city)
     request.input('description', description)
     request.input('id_work_area', id_work_area)
     request.input('employee', employee)
@@ -98,7 +100,6 @@ class UsersService {
           email,
           date_of_birth,
           telephone,
-          id_city,
           description,
           id_work_area,
           employee,
@@ -113,7 +114,6 @@ class UsersService {
           @email,
           @date_of_birth,
           @telephone,
-          @id_city,
           @description,
           @id_work_area,
           @employee,
@@ -152,7 +152,6 @@ class UsersService {
     email,
     date_of_birth,
     telephone,
-    id_city,
     description,
     id_work_area,
     employee,
@@ -171,7 +170,6 @@ class UsersService {
     request.input('email', email)
     request.input('date_of_birth', new Date(date_of_birth))
     request.input('telephone', telephone)
-    request.input('id_city', id_city)
     request.input('description', description)
     request.input('id_work_area', id_work_area)
     request.input('employee', employee)
@@ -190,7 +188,6 @@ class UsersService {
             last_name        = @last_name,
             email            = @email,
             telephone        = @telephone,
-            id_city          = @id_city,
             description      = @description,
             id_work_area     = @id_work_area,
             employee         = @employee,
@@ -234,6 +231,58 @@ class UsersService {
     )
     return recordset[0] || {}
   }
+
+  async getPostulations({id_employee}) {
+    const cnx =  await this.provider.getConnection()
+    const request = await cnx.request()
+    request.input('id_employee', id_employee)
+    const {recordset} = await request.query(
+
+      `
+      
+
+
+      `
+
+
+    )
+
+    return recordset[0] || {}
+  }
+  async getProblems({id_employer}) {
+    const cnx =  await this.provider.getConnection()
+    const request = await cnx.request()
+    request.input('id_employer', id_employer)
+    const {recordset} = await request.query(
+
+      `
+      
+      SELECT  a.id_user,
+              a.id AS id_employer,
+              b.status,
+              c.employer_name,
+              c.modality,
+              c.salary_range1,
+              c.salary_range2,
+              c.category,
+              c.title,
+              c.file_url,
+              c.requeriments,
+              c.long_description,
+              c.short_description,
+              c.schedule,
+              c.created_at,
+              c.guid
+      FROM [employers] AS a WITH (NOLOCK)
+      INNER JOIN [employers_job_offers] AS b WITH (NOLOCK) ON (a.id = b.id_employer)
+      INNER JOIN [job_offers] AS c WITH (NOLOCK) ON (b.id_job_offer = c.id)
+      WHERE a.id = @id_employer
+      `
+    )
+
+    return recordset || {}
+  }
+
 }
 
 module.exports = UsersService

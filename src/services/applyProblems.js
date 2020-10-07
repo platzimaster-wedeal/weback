@@ -33,14 +33,14 @@ class ApplyToProblme {
 
   async insert ({
     id_employee,
-    id_employer_job_offer,
+    id_employers_job_offer,
     hired
 
   }) {
     const cnx = await this.provider.getConnection()
     const request = await cnx.request()
     request.input('id_employee', id_employee)
-    request.input('id_employer_job_offer', id_employer_job_offer)
+    request.input('id_employers_job_offer', id_employers_job_offer)
     request.input('hired', hired)
     const { recordset } = await request.query(
                 `
@@ -52,13 +52,14 @@ class ApplyToProblme {
                 )
                 VALUES
                 (
-                  @id_employer_job_offer,
+                  @id_employers_job_offer,
                   @id_employee,
                   @hired
                 )
+                
                 `
     )
-    return recordset[0] || {}
+    return recordset || {}
   }
 
   async update (id_postulation, {

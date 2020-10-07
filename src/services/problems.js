@@ -10,8 +10,29 @@ class ProblemService {
     const request = await cnx.request()
     const { recordset } = await request.query(
             `
-              SELECT *
-              FROM job_offers WITH (NOLOCK)
+            SELECT TOP(100) A.id,
+                   A.title,
+                   A.short_description,
+                   A.long_description,
+                   D.first_name AS employer_name,
+                   D.last_name AS employer_lastname,
+                   A.modality,
+                   A.salary_range1,
+                   A.salary_range2,
+                   A.category,
+                   A.file_url,
+                   A.requeriments,
+                   B.id AS id_employer_job_offer,
+                   B.[status] AS employer_job_offer_status,
+                   B.id_employer AS id_employer,
+                   D.avatar AS user_avatar,
+                   A.guid,
+                   A.created_at
+            FROM job_offers AS A WITH (NOLOCK)
+            INNER JOIN employers_job_offers AS B WITH (NOLOCK) ON (A.id = B.id_job_offer)
+            INNER JOIN employers AS C WITH (NOLOCK) ON (B.id_employer = C.id)
+            INNER JOIN users AS D WITH (NOLOCK) ON (C.id_user = D.id)
+            ORDER BY created_at DESC
             `
     )
     return recordset || []
@@ -23,9 +44,30 @@ class ProblemService {
     request.input('id_problem', id_problem)
     const { recordset } = await request.query(
             `
-            SELECT * 
-            FROM job_offers WITH (NOLOCK)
-            WHERE id = @id_problem
+            SELECT A.id,
+                   A.title,
+                   A.short_description,
+                   A.long_description,
+                   D.first_name AS employer_name,
+                   D.last_name AS employer_lastname,
+                   A.modality,
+                   A.salary_range1,
+                   A.salary_range2,
+                   A.category,
+                   A.file_url,
+                   A.requeriments,
+                   B.id AS id_employer_job_offer,
+                   B.[status] AS employer_job_offer_status,
+                   B.id_employer AS id_employer,
+                   D.avatar AS user_avatar,
+                   A.guid,
+                   A.created_at
+            FROM job_offers AS A WITH (NOLOCK)
+            INNER JOIN employers_job_offers AS B WITH (NOLOCK) ON (A.id = B.id_job_offer)
+            INNER JOIN employers AS C WITH (NOLOCK) ON (B.id_employer = C.id)
+            INNER JOIN users AS D WITH (NOLOCK) ON (C.id_user = D.id)
+            WHERE A.id = @id_problem
+
 
             `
     )
@@ -97,7 +139,7 @@ class ProblemService {
 
             SET @id_problem = IDENT_CURRENT('job_offers')
             
-            INSERT INTO employers_job_offers (id_job_offer, id_employer status)
+            INSERT INTO employers_job_offers (id_job_offer, id_employer, status)
             VALUES (@id_problem, @id_employer, 'available')
             
             SET @id_employer_job_offer = IDENT_CURRENT('employers_job_offers')
