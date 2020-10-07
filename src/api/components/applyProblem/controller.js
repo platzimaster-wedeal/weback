@@ -17,6 +17,7 @@ module.exports = (applyToProblem, authsService) => {
     body = {
       ...body
     }
+    console.log(body)
     const recordset = await applyToProblem.insert(body)
 
     return recordset
