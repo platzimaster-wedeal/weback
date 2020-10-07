@@ -14,8 +14,6 @@ class ProblemService {
                    A.title,
                    A.short_description,
                    A.long_description,
-                   D.first_name AS employer_name,
-                   D.last_name AS employer_lastname,
                    A.modality,
                    A.salary_range1,
                    A.salary_range2,
@@ -27,10 +25,13 @@ class ProblemService {
                    B.id_employer AS id_employer,
                    D.avatar AS user_avatar,
                    A.guid,
-                   A.created_at
+                   A.created_at,
+                   D.id AS user_id,
+                   D.first_name AS employer_name,
+                   D.last_name AS employer_lastname
             FROM job_offers AS A WITH (NOLOCK)
             INNER JOIN employers_job_offers AS B WITH (NOLOCK) ON (A.id = B.id_job_offer)
-            INNER JOIN employers AS C WITH (NOLOCK) ON (B.id_employer = C.id)
+            FULL OUTER JOIN employers AS C WITH (NOLOCK) ON (B.id_employer = C.id)
             INNER JOIN users AS D WITH (NOLOCK) ON (C.id_user = D.id)
             ORDER BY created_at DESC
             `
