@@ -23,7 +23,8 @@ class PostsService {
              B.publication_date AS comment_createdAt,
              A.publication_date , COUNT (*) AS total_likes,
              D.id AS id_user,
-             D.first_name AS user_firstname
+             D.first_name AS user_firstname,
+             D.avatar
       FROM posts AS A WITH (NOLOCK)
       FULL OUTER JOIN comments AS B ON(B.id_post = A.id)
       FULL OUTER JOIN user_likes AS C ON(C.id_post = A.id)
@@ -40,7 +41,8 @@ class PostsService {
                B.publication_date,
                A.publication_date,
                D.id,
-               D.first_name
+               D.first_name,
+               D.avatar
 ORDER BY A.publication_date DESC
       `
     )
