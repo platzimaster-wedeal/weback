@@ -21,7 +21,7 @@ router.get('/languages/:id_user/getLanguages', getUserLanguages)
 router.get('/connections/:id_user', getConnections)
 
 function getConnections(req, res, next) {
-  controller.getConenctions(req.params)
+  controller.getConnections(req.params)
   .then(list => {
     response.success(req, res, list, 200);
   })
