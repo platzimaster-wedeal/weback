@@ -37,19 +37,21 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(morgan('dev'))
 
-const allowlist = ['https://wedeal.vercel.app', 'http://localhost:3000']
-const corsOptionsDelegate = function (req, callback) {
-  const corsOptions;
-  if (allowlist.indexOf(req.header('Origin')) !== -1) {
-    corsOptions = { origin: true } // reflect (enable) the requested origin in the CORS response
-  } else {
-    corsOptions = { origin: false } // disable CORS for this request
+var allowedOrigins = ['http://localhost:3000',
+                      'https://wedeal.vercel.app'];
+app.use(cors({
+  origin: function(origin, callback){
+    // allow requests with no origin 
+    // (like mobile apps or curl requests)
+    if(!origin) return callback(null, true);
+    if(allowedOrigins.indexOf(origin) === -1){
+      var msg = 'The CORS policy for this site does not ' +
+                'allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
   }
-  callback(null, corsOptions) // callback expects two parameters: error and options
-}
-
-
-app.use(cors(corsOptionsDelegate))
+}));
 const storage = multer.diskStorage({
   destination: path.join(__dirname, 'public/uploads'),
   filename: (req, file, cb) => {
