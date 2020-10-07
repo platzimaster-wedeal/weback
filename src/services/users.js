@@ -307,26 +307,29 @@ class UsersService {
     const {recordset} = await request.query(
 
       `
-        SELECT  a.id_user,
-                a.id AS id_employer,
-                b.status,
-                c.employer_name,
-                c.modality,
-                c.salary_range1,
-                c.salary_range2,
-                c.category,
-                c.title,
-                c.file_url,
-                c.requeriments,
-                c.long_description,
-                c.short_description,
-                c.schedule,
-                c.created_at,
-                c.guid
-        FROM [employers] AS a WITH (NOLOCK)
-        INNER JOIN [employers_job_offers] AS b WITH (NOLOCK) ON (a.id = b.id_employer)
-        INNER JOIN [job_offers] AS c WITH (NOLOCK) ON (b.id_job_offer = c.id)
-        WHERE a.id = @id_employer
+      SELECT  a.id_user,
+            a.id AS id_employer,
+            b.status,
+            c.employer_name,
+            c.modality,
+            c.salary_range1,
+            c.salary_range2,
+            c.category,
+            c.title,
+            c.file_url,
+            c.requeriments,
+            c.long_description,
+            c.short_description,
+            c.schedule,
+            c.created_at,
+            c.guid,
+            c.id AS problem_id,
+            d.avatar AS user_avatar
+      FROM [employers] AS a WITH (NOLOCK)
+      INNER JOIN users AS D WITH (NOLOCK) ON (a.id_user = d.id)
+      INNER JOIN [employers_job_offers] AS b WITH (NOLOCK) ON (a.id = b.id_employer)
+      INNER JOIN [job_offers] AS c WITH (NOLOCK) ON (b.id_job_offer = c.id)
+      WHERE a.id = @id_employer
       `
     )
 
