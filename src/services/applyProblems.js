@@ -56,7 +56,7 @@ class ApplyToProblme {
                   @id_employee,
                   @hired
                 )
-                
+                SELECT IDENT_CURRENT('postulations') AS id_postulation
                 `
     )
     return recordset || {}

@@ -154,7 +154,6 @@ class UsersService {
     id_work_area,
     employee,
     employeer,
-    myAvatar,
     id_language,
     file_url,
     degree_title,
@@ -172,7 +171,6 @@ class UsersService {
     request.input('id_work_area', id_work_area)
     request.input('employee', employee)
     request.input('employeer', employeer)
-    request.input('avatar', myAvatar)
     request.input('id_language', id_language)
     request.input('file_url', file_url)
     request.input('degree_title', degree_title)
@@ -189,8 +187,7 @@ class UsersService {
             description      = @description,
             id_work_area     = @id_work_area,
             employee         = @employee,
-            employeer        = @employeer,
-            avatar           = @avatar
+            employeer        = @employeer
         WHERE id = @id_user
 
         UPDATE users_languages
@@ -203,22 +200,66 @@ class UsersService {
 
         SELECT TOP (1) @id_employee = id FROM employees WHERE id_user = @id_user
 
-        INSERT INTO experiences
-        (
-            degree,
-            file_url,
-            description
-        )
-        VALUES
-        (
-            @degree_title,
-            @file_url,
-            @degree_description
-        )
+        
         SELECT @@ROWCOUNT AS [count]
       `
     )
     return recordset[0] || {}
+  }
+
+  async patch (id_user, { myAvatar }) {
+    const cnx = await this.provider.getConnection()
+    const request = await cnx.request()
+    request.input('id_user', id_user)
+    request.input('file_url', myAvatar)
+
+    const { recordset } = await request.query(
+      `
+        UPDATE users
+        SET avatar    = @file_url
+        WHERE id = @id_user
+
+        SELECT @@ROWCOUNT AS [count]
+      `
+    )
+    return recordset || []
+  }
+  async patchExpereince ({id_employee}, {
+    degree_title,
+    degree_description,
+    file_url 
+  }) {
+    console.log(id_employee)
+    console.log(degree_title)
+    console.log(degree_description)
+    console.log(file_url)
+    const cnx = await this.provider.getConnection()
+    const request = await cnx.request()
+    request.input('id_employee', id_employee)
+    request.input('degree_title', degree_title)
+    request.input('degree_description', degree_description)
+    request.input('file_url', file_url)
+
+    const { recordset } = await request.query(
+      `
+      INSERT INTO experiences
+      (
+          id_employee,
+          degree,
+          file_url,
+          description
+      )
+      VALUES
+      (
+          @id_employee,
+          @degree_title,
+          @file_url,
+          @degree_description
+      )
+      SELECT IDENT_CURRENT('experiences') AS id_experience
+      `
+    )
+    return recordset || []
   }
 
   async remove ({ id_user }) {
@@ -241,13 +282,19 @@ class UsersService {
     request.input('id_employee', id_employee)
     const {recordset} = await request.query(
       `
-      SELECT  a.id as id_user_language,
-              a.id_language,
-              b.acronym,
-              b.language
-      FROM [users_languages] AS a WITH (NOLOCK)
-      INNER JOIN [languages] AS b ON (a.id_language = b.id)
-      WHERE id_user = qid_employee
+      SELECT a.id_user,
+             a.id AS id_employee,
+             b.hired,
+             b.id AS id_postulation,
+             b.id_employers_job_offer,
+             c.id_job_offer,
+             c.status
+      FROM [employees] AS a WITH (NOLOCK)
+      INNER JOIN [postulations] AS b WITH (NOLOCK) ON (a.id = b.id_employee)
+      INNER JOIN [employers_job_offers] as c WITH (NOLOCK) ON (b.id_employers_job_offer = c.id)
+      INNER JOIN [job_offers] as d WITH (NOLOCK) ON (c.id_job_offer = d.id)
+      WHERE a.id = @id_employee
+      
       `
     )
 

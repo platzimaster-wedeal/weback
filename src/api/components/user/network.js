@@ -12,9 +12,11 @@ router.get('/', secure('list'), list)
 router.get('/:id', secure('get'), get)
 router.post('/', secure('insert'), insert)
 router.put('/:id', secure('update'), update)
+router.patch('/:id', secure('update'), patch)
 router.delete('/:id', secure('remove'), remove)
+router.patch('/experiences/:id_employee', patchExpereince)
 router.get('/problems/:id_employer/getProblems', getProblems)
-router.get('/postulations/:id_user/getPostulations', getPostulations)
+router.get('/postulations/:id_employee/getPostulations', getPostulations)
 router.get('/languages/:id_user/getLanguages', getUserLanguages)
 router.get('/connections/:id_user', getConnections)
 
@@ -76,6 +78,22 @@ function insert (req, res, next) {
 
 function update (req, res, next) {
   controller.update(req.params.id, req.body, req.files)
+    .then(result => {
+      response.success(req, res, result, 201)
+    })
+    .catch(next)
+}
+
+function patch(req, res, next) {
+  controller.patch(req.params.id, req.files)
+    .then(result => {
+      response.success(req, res, result, 201)
+    })
+    .catch(next)
+}
+function patchExpereince(req, res, next) {
+  
+  controller.patchExpereince(req.params, req.body, req.files)
     .then(result => {
       response.success(req, res, result, 201)
     })

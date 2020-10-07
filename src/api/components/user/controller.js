@@ -40,14 +40,31 @@ module.exports = (usersService, authsService, filesService) => {
     return recordset
   }
 
-  async function update (id, body, { myAvatar }) {
+  async function update (id, body) {
+    console.log(body)
+    return await usersService.update(id, body)
+  }
+  async function patch (id, { myAvatar }) {
     const dataAvatar = await filesService.uploadFile(myAvatar[0].path)
+
+    const body = {
+      myAvatar: dataAvatar.secure_url
+    }
+    return await usersService.patch(id, body)
+  }
+
+
+  async function patchExpereince (params, body, { myFile }) {
+    console.log(myFile)
+    const dataMyFile = await filesService.uploadFile(myFile[0].path)
+
 
     body = {
       ...body,
-      myAvatar: dataAvatar.secure_url
+      file_url: dataMyFile.secure_url
     }
-    return await usersService.update(id, body)
+    console.log(body)
+    return await usersService.patchExpereince(params, body)
   }
 
   async function remove (id) {
@@ -88,10 +105,12 @@ module.exports = (usersService, authsService, filesService) => {
     get,
     insert,
     update,
+    patch,
     remove,
     getPostulations,
     getProblems,
     getUserLanguages,
     getConnections,
+    patchExpereince
   }
 }
