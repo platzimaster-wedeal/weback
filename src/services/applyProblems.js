@@ -11,7 +11,7 @@ class ApplyToProblme {
     const { recordset } = await request.query(
                 `
                   SELECT *
-                  FROM employers_job_offers WITH (NOLOCK)
+                  FROM postulations WITH (NOLOCK)
                 `
     )
     return recordset || []
@@ -24,7 +24,7 @@ class ApplyToProblme {
     const { recordset } = await request.query(
                 `
                 SELECT * 
-                FROM employers_job_offers WITH (NOLOCK)
+                FROM postulations WITH (NOLOCK)
                 WHERE id = @id_applyProblem
                 `
     )
@@ -32,25 +32,53 @@ class ApplyToProblme {
   }
 
   async insert ({
-    id_employer,
-    id_job_offer,
-    status,
-    id_employer_job_offer
+    id_employee,
+    id_employers_job_offer,
+    hired
 
   }) {
     const cnx = await this.provider.getConnection()
     const request = await cnx.request()
-    request.input('id_employer', id_employer)
-    request.input('id_job_offer', id_job_offer)
-    request.input('status', status)
-    request.input('id_employer_job_offer', id_employer_job_offer)
+    request.input('id_employee', id_employee)
+    request.input('id_employers_job_offer', id_employers_job_offer)
+    request.input('hired', hired)
     const { recordset } = await request.query(
                 `
-                UPDATE employers_job_offers
-                SET id_employer        = @id_employer,
-                    id_job_offer       = @id_job_offer,
-                    status             = @status
-                WHERE id = @id_employer_job_offer
+                INSERT INTO postulations
+                (
+                  id_employers_job_offer,
+                  id_employee,
+                  hired
+                )
+                VALUES
+                (
+                  @id_employers_job_offer,
+                  @id_employee,
+                  @hired
+                )
+                
+                `
+    )
+    return recordset || {}
+  }
+
+  async update (id_postulation, {
+    id_employee,
+    id_employer_job_offer,
+    hired
+
+  }) {
+    const cnx = await this.provider.getConnection()
+    const request = await cnx.request()
+    request.input('id_postulation', id_postulation)
+    request.input('id_employee', id_employee)
+    request.input('id_employer_job_offer', id_employer_job_offer)
+    request.input('hired', hired)
+    const { recordset } = await request.query(
+                `
+                UPDATE postulations
+                SET hired        = @hired,
+                WHERE id = @id_postulation
     
                 SELECT @@ROWCOUNT AS [count]
                 `
@@ -58,45 +86,18 @@ class ApplyToProblme {
     return recordset[0] || {}
   }
 
-  async update (id_problem, {
-    id_employer,
-    id_job_offer,
-    status,
-    id_employer_job_offer
-
-  }) {
+  async remove ({ id_postulation }) {
     const cnx = await this.provider.getConnection()
     const request = await cnx.request()
-    request.input('id_employer', id_employer)
-    request.input('id_job_offer', id_job_offer)
-    request.input('status', status)
-    request.input('id_employer_job_offer', id_employer_job_offer)
+    request.input('id_postulation', id_postulation)
     const { recordset } = await request.query(
                 `
-                UPDATE employers_job_offers
-                SET id_employer        = @id_employer,
-                    id_job_offer       = @id_job_offer
-                WHERE id = @id_employer_job_offer
-    
-                SELECT @@ROWCOUNT AS [count]
-                `
-    )
-    return recordset[0] || {}
-  }
-
-  async remove ({ id_problem }) {
-      const cnx = await this.provider.getConnection()
-      const request = await cnx.request()
-      request.input('id_problem', id_problem)
-      const { recordset } = await request.query(
-                `
-                  DELETE FROM employers_job_offers
-                  WHERE id = @id_problem
+                  DELETE FROM postulations
+                  WHERE id = @id_postulation
                   SELECT @@ROWCOUNT AS [count]
                 `
-      )
-      return recordset[0] || {}
-    
+    )
+    return recordset[0] || {}
   }
 }
 
