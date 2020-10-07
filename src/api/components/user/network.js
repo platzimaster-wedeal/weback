@@ -77,7 +77,7 @@ function insert (req, res, next) {
 }
 
 function update (req, res, next) {
-  controller.update(req.params.id, req.body, req.files)
+  controller.update(req.params.id, req.body)
     .then(result => {
       response.success(req, res, result, 201)
     })
