@@ -48,7 +48,7 @@ FULL OUTER JOIN [auths] AS b WITH (NOLOCK) ON (a.id = b.id_user)
 FULL OUTER JOIN [employees] AS c WITH (NOLOCK) ON (b.id_user = c.id_user)
 FULL OUTER JOIN [employers] AS d WITH (NOLOCK) ON (c.id_user = d.id_user)
 FULL OUTER JOIN [work_areas] AS e WITH (NOLOCK) ON (a.id_work_area = e.id)
-WHERE a.id = 104
+WHERE a.id = @id_user
       `
     )
     return recordset[0] || {}
