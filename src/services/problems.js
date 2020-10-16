@@ -19,7 +19,7 @@ class ProblemService {
                    A.salary_range2,
                    A.category,
                    A.file_url,
-                   A.requeriments,
+                   A.requirements,
                    B.id AS id_employer_job_offer,
                    B.[status] AS employer_job_offer_status,
                    B.id_employer AS id_employer,
@@ -56,7 +56,7 @@ class ProblemService {
                    A.salary_range2,
                    A.category,
                    A.file_url,
-                   A.requeriments,
+                   A.requirements,
                    B.id AS id_employer_job_offer,
                    B.[status] AS employer_job_offer_status,
                    B.id_employer AS id_employer,
@@ -92,7 +92,7 @@ class ProblemService {
                    A.salary_range2,
                    A.category,
                    A.file_url,
-                   A.requeriments,
+                   A.requirements,
                    B.id AS id_employer_job_offer,
                    B.[status] AS employer_job_offer_status,
                    B.id_employer AS id_employer,
@@ -116,7 +116,7 @@ class ProblemService {
     id_employer,
     title,
     employer_name,
-    requeriments,
+    requirements,
     modality,
     salary_range1,
     salary_range2,
@@ -131,7 +131,7 @@ class ProblemService {
     request.input("id_employer", id_employer);
     request.input("title", title);
     request.input("employer_name", employer_name);
-    request.input("requeriments", requeriments);
+    request.input("requirements", requirements);
     request.input("modality", modality);
     request.input("salary_range1", salary_range1);
     request.input("salary_range2", salary_range2);
@@ -149,7 +149,7 @@ class ProblemService {
             (
                 title,
                 employer_name,
-                requeriments,
+                requirements,
                 modality,
                 salary_range1,
                 salary_range2,
@@ -163,7 +163,7 @@ class ProblemService {
             (
                 @title,
                 @employer_name,
-                @requeriments,
+                @requirements,
                 @modality,
                 @salary_range1,
                 @salary_range2,
@@ -194,7 +194,7 @@ class ProblemService {
     {
       title,
       employer_name,
-      requeriments,
+      requirements,
       modality,
       salary_range1,
       salary_range2,
@@ -210,7 +210,7 @@ class ProblemService {
     request.input("id_problem", id_problem);
     request.input("title", title);
     request.input("employer_name", employer_name);
-    request.input("requeriments", requeriments);
+    request.input("requirements", requirements);
     request.input("modality", modality);
     request.input("salary_range1", salary_range1);
     request.input("salary_range2", salary_range2);
@@ -224,7 +224,7 @@ class ProblemService {
             UPDATE job_offers
             SET title               = @title,
                 employer_name       = @employer_name,
-                requeriments        = @requeriments,
+                requirements        = @requirements,
                 modality            = @modality,
                 salary_range1       = @salary_range1,
                 salary_range2       = @salary_range2,
