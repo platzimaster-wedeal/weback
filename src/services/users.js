@@ -343,7 +343,7 @@ class UsersService {
             c.category,
             c.title,
             c.file_url,
-            c.requeriments,
+            c.requirements,
             c.long_description,
             c.short_description,
             c.schedule,
