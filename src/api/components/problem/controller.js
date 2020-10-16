@@ -12,7 +12,14 @@ module.exports = (problemService, filesService) => {
 
     return problemService.get(params)
   }
+  async function getPostulatedEmployee (id) {
+    const params = {
+      id_problem: id
+    }
 
+    return problemService.getPostulatedEmployee(params)
+  }
+  
   async function insert (body, { myFile }) {
     const dataMyFile = await filesService.uploadFiles(myFile)
 
@@ -51,6 +58,7 @@ module.exports = (problemService, filesService) => {
     get,
     insert,
     update,
-    remove
+    remove,
+    getPostulatedEmployee
   }
 }

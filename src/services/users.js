@@ -1,26 +1,26 @@
-'use strict'
+"use strict";
 
 class UsersService {
-  constructor (provider = require('../providers/mssql')) {
-    this.provider = provider
+  constructor(provider = require("../providers/mssql")) {
+    this.provider = provider;
   }
 
-  async list () {
-    const cnx = await this.provider.getConnection()
-    const request = await cnx.request()
+  async list() {
+    const cnx = await this.provider.getConnection();
+    const request = await cnx.request();
     const { recordset } = await request.query(
       `
         SELECT *
         FROM users WITH (NOLOCK)
       `
-    )
-    return recordset || []
+    );
+    return recordset || [];
   }
 
-  async get ({ id_user }) {
-    const cnx = await this.provider.getConnection()
-    const request = await cnx.request()
-    request.input('id_user', id_user)
+  async get({ id_user }) {
+    const cnx = await this.provider.getConnection();
+    const request = await cnx.request();
+    request.input("id_user", id_user);
     const { recordset } = await request.query(
       `
       SELECT  a.id AS id_user,
@@ -36,25 +36,25 @@ class UsersService {
       a.employee,
       a.employeer,
       c.id AS id_employee,
-      e.id AS id_employer,
+      d.id AS id_employer,
       a.latitude,
       a.longitude,
       a.description,
-(SELECT ISNULL(AVG(qualification), 0)
-FROM scores WITH (NOLOCK)
-WHERE id_employee = c.id) AS qualification_average
-FROM [users] AS a WITH (NOLOCK)
-FULL OUTER JOIN [auths] AS b WITH (NOLOCK) ON (a.id = b.id_user)
-FULL OUTER JOIN [employees] AS c WITH (NOLOCK) ON (b.id_user = c.id_user)
-FULL OUTER JOIN [employers] AS d WITH (NOLOCK) ON (c.id_user = d.id_user)
-FULL OUTER JOIN [work_areas] AS e WITH (NOLOCK) ON (a.id_work_area = e.id)
-WHERE a.id = @id_user
+      (SELECT ISNULL(AVG(qualification), 0)
+      FROM scores WITH (NOLOCK)
+      WHERE id_employee = c.id) AS qualification_average
+      FROM [users] AS a WITH (NOLOCK)
+      FULL OUTER JOIN [auths] AS b WITH (NOLOCK) ON (a.id = b.id_user)
+      FULL OUTER JOIN [employees] AS c WITH (NOLOCK) ON (b.id_user = c.id_user)
+      FULL OUTER JOIN [employers] AS d WITH (NOLOCK) ON (c.id_user = d.id_user)
+      FULL OUTER JOIN [work_areas] AS e WITH (NOLOCK) ON (a.id_work_area = e.id)
+      WHERE a.id = @id_user
       `
-    )
-    return recordset[0] || {}
+    );
+    return recordset[0] || {};
   }
 
-  async insert ({
+  async insert({
     first_name,
     last_name,
     email,
@@ -64,29 +64,50 @@ WHERE a.id = @id_user
     id_work_area,
     employee,
     employeer,
+    country_id,
+    id_city,
     id_language,
     file_url,
     degree_title,
     degree_description,
-    last_job_title,
-    myAvatar
+    myAvatar,
   }) {
-    const cnx = await this.provider.getConnection()
-    const request = await cnx.request()
-    request.input('first_name', first_name)
-    request.input('last_name', last_name)
-    request.input('email', email)
-    request.input('date_of_birth', new Date(date_of_birth))
-    request.input('telephone', telephone)
-    request.input('description', description)
-    request.input('id_work_area', id_work_area)
-    request.input('employee', employee)
-    request.input('employeer', employeer)
-    request.input('id_language', id_language)
-    request.input('file_url', file_url)
-    request.input('degree_title', degree_title)
-    request.input('degree_description', degree_description)
-    request.input('avatar', myAvatar)
+    console.log({
+      first_name,
+      last_name,
+      email,
+      date_of_birth,
+      telephone,
+      description,
+      id_work_area,
+      employee,
+      employeer,
+      country_id,
+      id_city,
+      id_language,
+      file_url,
+      degree_title,
+      degree_description,
+      myAvatar,
+    });
+    const cnx = await this.provider.getConnection();
+    const request = await cnx.request();
+    request.input("first_name", first_name);
+    request.input("last_name", last_name);
+    request.input("email", email);
+    request.input("date_of_birth", new Date(date_of_birth));
+    request.input("telephone", telephone);
+    request.input("country_id", country_id);
+    request.input("id_city", id_city);
+    request.input("description", description);
+    request.input("id_work_area", id_work_area);
+    request.input("employee", employee);
+    request.input("employeer", employeer);
+    request.input("id_language", id_language);
+    request.input("file_url", file_url);
+    request.input("degree_title", degree_title);
+    request.input("degree_description", degree_description);
+    request.input("avatar", myAvatar);
     const { recordset } = await request.query(
       `
         DECLARE @id_user INT = 0;
@@ -101,6 +122,8 @@ WHERE a.id = @id_user
           date_of_birth,
           telephone,
           description,
+          id_city,
+          country_id,
           id_work_area,
           employee,
           employeer,
@@ -114,6 +137,8 @@ WHERE a.id = @id_user
           @date_of_birth,
           @telephone,
           @description,
+          @id_city,
+          @country_id,
           @id_work_area,
           @employee,
           @employeer,
@@ -140,41 +165,44 @@ WHERE a.id = @id_user
 
         SELECT @id_user AS id_user, @id_employee AS id_eployee, @id_employer AS id_epmloyer 
       `
-    )
-    return recordset[0] || {}
+    );
+    return recordset[0] || {};
   }
 
-  async update (id_user, {
-    first_name,
-    last_name,
-    email,
-    date_of_birth,
-    telephone,
-    description,
-    id_work_area,
-    employee,
-    employeer,
-    id_language,
-    file_url,
-    degree_title,
-    degree_description
-  }) {
-    const cnx = await this.provider.getConnection()
-    const request = await cnx.request()
-    request.input('id_user', id_user)
-    request.input('first_name', first_name)
-    request.input('last_name', last_name)
-    request.input('email', email)
-    request.input('date_of_birth', new Date(date_of_birth))
-    request.input('telephone', telephone)
-    request.input('description', description)
-    request.input('id_work_area', id_work_area)
-    request.input('employee', employee)
-    request.input('employeer', employeer)
-    request.input('id_language', id_language)
-    request.input('file_url', file_url)
-    request.input('degree_title', degree_title)
-    request.input('degree_description', degree_description)
+  async update(
+    id_user,
+    {
+      first_name,
+      last_name,
+      email,
+      date_of_birth,
+      telephone,
+      description,
+      id_work_area,
+      employee,
+      employeer,
+      id_language,
+      file_url,
+      degree_title,
+      degree_description,
+    }
+  ) {
+    const cnx = await this.provider.getConnection();
+    const request = await cnx.request();
+    request.input("id_user", id_user);
+    request.input("first_name", first_name);
+    request.input("last_name", last_name);
+    request.input("email", email);
+    request.input("date_of_birth", new Date(date_of_birth));
+    request.input("telephone", telephone);
+    request.input("description", description);
+    request.input("id_work_area", id_work_area);
+    request.input("employee", employee);
+    request.input("employeer", employeer);
+    request.input("id_language", id_language);
+    request.input("file_url", file_url);
+    request.input("degree_title", degree_title);
+    request.input("degree_description", degree_description);
     const { recordset } = await request.query(
       `
         DECLARE @id_employee INT = 0;
@@ -203,15 +231,15 @@ WHERE a.id = @id_user
         
         SELECT @@ROWCOUNT AS [count]
       `
-    )
-    return recordset[0] || {}
+    );
+    return recordset[0] || {};
   }
 
-  async patch (id_user, { myAvatar }) {
-    const cnx = await this.provider.getConnection()
-    const request = await cnx.request()
-    request.input('id_user', id_user)
-    request.input('file_url', myAvatar)
+  async patch(id_user, { myAvatar }) {
+    const cnx = await this.provider.getConnection();
+    const request = await cnx.request();
+    request.input("id_user", id_user);
+    request.input("file_url", myAvatar);
 
     const { recordset } = await request.query(
       `
@@ -221,24 +249,23 @@ WHERE a.id = @id_user
 
         SELECT @@ROWCOUNT AS [count]
       `
-    )
-    return recordset || []
+    );
+    return recordset || [];
   }
-  async patchExpereince ({id_employee}, {
-    degree_title,
-    degree_description,
-    file_url 
-  }) {
-    console.log(id_employee)
-    console.log(degree_title)
-    console.log(degree_description)
-    console.log(file_url)
-    const cnx = await this.provider.getConnection()
-    const request = await cnx.request()
-    request.input('id_employee', id_employee)
-    request.input('degree_title', degree_title)
-    request.input('degree_description', degree_description)
-    request.input('file_url', file_url)
+  async patchExpereince(
+    { id_employee },
+    { degree_title, degree_description, file_url }
+  ) {
+    console.log(id_employee);
+    console.log(degree_title);
+    console.log(degree_description);
+    console.log(file_url);
+    const cnx = await this.provider.getConnection();
+    const request = await cnx.request();
+    request.input("id_employee", id_employee);
+    request.input("degree_title", degree_title);
+    request.input("degree_description", degree_description);
+    request.input("file_url", file_url);
 
     const { recordset } = await request.query(
       `
@@ -258,29 +285,29 @@ WHERE a.id = @id_user
       )
       SELECT IDENT_CURRENT('experiences') AS id_experience
       `
-    )
-    return recordset || []
+    );
+    return recordset || [];
   }
 
-  async remove ({ id_user }) {
-    const cnx = await this.provider.getConnection()
-    const request = await cnx.request()
-    request.input('id_user', id_user)
+  async remove({ id_user }) {
+    const cnx = await this.provider.getConnection();
+    const request = await cnx.request();
+    request.input("id_user", id_user);
     const { recordset } = await request.query(
-        `
+      `
           DELETE FROM users
           WHERE id = @id_user
           SELECT @@ROWCOUNT AS [count]
         `
-    )
-    return recordset[0] || {}
+    );
+    return recordset[0] || {};
   }
 
-  async getPostulations({id_employee}) {
-    const cnx =  await this.provider.getConnection()
-    const request = await cnx.request()
-    request.input('id_employee', id_employee)
-    const {recordset} = await request.query(
+  async getPostulations({ id_employee }) {
+    const cnx = await this.provider.getConnection();
+    const request = await cnx.request();
+    request.input("id_employee", id_employee);
+    const { recordset } = await request.query(
       `
       SELECT a.id_user,
              a.id AS id_employee,
@@ -296,49 +323,50 @@ WHERE a.id = @id_user
       WHERE a.id = @id_employee
       
       `
-    )
+    );
 
-    return recordset[0] || {}
+    return recordset[0] || {};
   }
-  async getProblems({id_employer}) {
-    const cnx =  await this.provider.getConnection()
-    const request = await cnx.request()
-    request.input('id_employer', id_employer)
-    const {recordset} = await request.query(
-
+  async getProblems({ id_employer }) {
+    const cnx = await this.provider.getConnection();
+    const request = await cnx.request();
+    request.input("id_employer", id_employer);
+    const { recordset } = await request.query(
       `
-        SELECT  a.id_user,
-                a.id AS id_employer,
-                b.status,
-                c.employer_name,
-                c.modality,
-                c.salary_range1,
-                c.salary_range2,
-                c.category,
-                c.title,
-                c.file_url,
-                c.requeriments,
-                c.long_description,
-                c.short_description,
-                c.schedule,
-                c.created_at,
-                c.guid
-        FROM [employers] AS a WITH (NOLOCK)
-        INNER JOIN [employers_job_offers] AS b WITH (NOLOCK) ON (a.id = b.id_employer)
-        INNER JOIN [job_offers] AS c WITH (NOLOCK) ON (b.id_job_offer = c.id)
-        WHERE a.id = @id_employer
+      SELECT  a.id_user,
+            a.id AS id_employer,
+            b.status,
+            c.employer_name,
+            c.modality,
+            c.salary_range1,
+            c.salary_range2,
+            c.category,
+            c.title,
+            c.file_url,
+            c.requeriments,
+            c.long_description,
+            c.short_description,
+            c.schedule,
+            c.created_at,
+            c.guid,
+            c.id AS problem_id,
+            d.avatar AS user_avatar
+      FROM [employers] AS a WITH (NOLOCK)
+      INNER JOIN users AS D WITH (NOLOCK) ON (a.id_user = d.id)
+      INNER JOIN [employers_job_offers] AS b WITH (NOLOCK) ON (a.id = b.id_employer)
+      INNER JOIN [job_offers] AS c WITH (NOLOCK) ON (b.id_job_offer = c.id)
+      WHERE a.id = @id_employer
       `
-    )
+    );
 
-    return recordset || {}
+    return recordset || {};
   }
 
-  async getUserLanguages({id_user}) {
-    const cnx =  await this.provider.getConnection()
-    const request = await cnx.request()
-    request.input('id_user', id_user)
-    const {recordset} = await request.query(
-
+  async getUserLanguages({ id_user }) {
+    const cnx = await this.provider.getConnection();
+    const request = await cnx.request();
+    request.input("id_user", id_user);
+    const { recordset } = await request.query(
       `
         SELECT a.id as id_user_language,
           a.id_language,
@@ -348,15 +376,15 @@ WHERE a.id = @id_user
         INNER JOIN [languages] AS b ON (a.id_language = b.id)
         WHERE id_user = @id_user
       `
-    )
+    );
 
-    return recordset || {}
+    return recordset || {};
   }
 
   async getConnections({ id_user }) {
-    const cnx =  await this.provider.getConnection()
-    const request = await cnx.request()
-    request.input('id_user', id_user)
+    const cnx = await this.provider.getConnection();
+    const request = await cnx.request();
+    request.input("id_user", id_user);
     const { recordset } = await request.query(
       `
         IF OBJECT_ID(N'tempdb..#tmp_employers_connections') IS NOT NULL
@@ -413,10 +441,10 @@ WHERE a.id = @id_user
         SELECT DISTINCT id_user, first_name, last_name, avatar
         FROM #tmp_users_connections
       `
-    )
+    );
 
-    return recordset || {}
+    return recordset || {};
   }
 }
 
-module.exports = UsersService
+module.exports = UsersService;

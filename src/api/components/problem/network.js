@@ -8,6 +8,7 @@ const router = express.Router()
 
 router.get('/', secure('list'), list)
 router.get('/:id', secure('get'), get)
+router.get('/:id/getPostulated', getPostulatedEmployee)
 router.post('/', secure('insert'), insert)
 router.put('/:id', update)
 router.delete('/:id', secure('remove'), remove)
@@ -23,6 +24,14 @@ function list (req, res, next) {
 function get (req, res, next) {
   console.log(req.params.id)
   controller.get(req.params.id)
+    .then(result => {
+      response.success(req, res, result, 200)
+    })
+    .catch(next)
+}
+function getPostulatedEmployee (req, res, next) {
+  console.log(req.params.id)
+  controller.getPostulatedEmployee(req.params.id)
     .then(result => {
       response.success(req, res, result, 200)
     })
