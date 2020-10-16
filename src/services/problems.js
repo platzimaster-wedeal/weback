@@ -1,15 +1,15 @@
-'use strict'
+"use strict";
 
 class ProblemService {
-  constructor (provider = require('../providers/mssql')) {
-    this.provider = provider
+  constructor(provider = require("../providers/mssql")) {
+    this.provider = provider;
   }
 
-  async list () {
-    const cnx = await this.provider.getConnection()
-    const request = await cnx.request()
+  async list() {
+    const cnx = await this.provider.getConnection();
+    const request = await cnx.request();
     const { recordset } = await request.query(
-            `
+      `
             SELECT TOP(60) A.id,
                    A.title,
                    A.short_description,
@@ -19,7 +19,7 @@ class ProblemService {
                    A.salary_range2,
                    A.category,
                    A.file_url,
-                   A.requeriments,
+                   A.requirements,
                    B.id AS id_employer_job_offer,
                    B.[status] AS employer_job_offer_status,
                    B.id_employer AS id_employer,
@@ -35,16 +35,16 @@ class ProblemService {
             INNER JOIN users AS D WITH (NOLOCK) ON (C.id_user = D.id)
             ORDER BY created_at DESC
             `
-    )
-    return recordset || []
+    );
+    return recordset || [];
   }
 
-  async get ({ id_problem }) {
-    const cnx = await this.provider.getConnection()
-    const request = await cnx.request()
-    request.input('id_problem', id_problem)
+  async get({ id_problem }) {
+    const cnx = await this.provider.getConnection();
+    const request = await cnx.request();
+    request.input("id_problem", id_problem);
     const { recordset } = await request.query(
-            `
+      `
             SELECT A.id,
                    A.title,
                    A.short_description,
@@ -56,7 +56,7 @@ class ProblemService {
                    A.salary_range2,
                    A.category,
                    A.file_url,
-                   A.requeriments,
+                   A.requirements,
                    B.id AS id_employer_job_offer,
                    B.[status] AS employer_job_offer_status,
                    B.id_employer AS id_employer,
@@ -72,15 +72,15 @@ class ProblemService {
 
 
             `
-    )
-    return recordset[0] || {}
+    );
+    return recordset[0] || {};
   }
-  async getPostulatedEmployee ({ id_problem }) {
-    const cnx = await this.provider.getConnection()
-    const request = await cnx.request()
-    request.input('id_problem', id_problem)
+  async getPostulatedEmployee({ id_problem }) {
+    const cnx = await this.provider.getConnection();
+    const request = await cnx.request();
+    request.input("id_problem", id_problem);
     const { recordset } = await request.query(
-            `
+      `
             SELECT A.id,
                    A.title,
                    A.short_description,
@@ -108,12 +108,11 @@ class ProblemService {
             INNER JOIN postulations AS E WITH (NOLOCK) ON (E.id_employers_job_offer = B.id)
             WHERE A.id = @id_problem
             `
-    )
-    return recordset[0] || {}
+    );
+    return recordset[0] || {};
   }
-  
 
-  async insert ({
+  async insert({
     id_employer,
     title,
     employer_name,
@@ -125,25 +124,24 @@ class ProblemService {
     long_description,
     file_url,
     category,
-    schedule
-
+    schedule,
   }) {
-    const cnx = await this.provider.getConnection()
-    const request = await cnx.request()
-    request.input('id_employer', id_employer)
-    request.input('title', title)
-    request.input('employer_name', employer_name)
-    request.input('requeriments', requeriments)
-    request.input('modality', modality)
-    request.input('salary_range1', salary_range1)
-    request.input('salary_range2', salary_range2)
-    request.input('short_description', short_description)
-    request.input('long_description', long_description)
-    request.input('file_url', file_url)
-    request.input('category', category)
-    request.input('schedule', new Date(schedule))
+    const cnx = await this.provider.getConnection();
+    const request = await cnx.request();
+    request.input("id_employer", id_employer);
+    request.input("title", title);
+    request.input("employer_name", employer_name);
+    request.input("requeriments", requeriments);
+    request.input("modality", modality);
+    request.input("salary_range1", salary_range1);
+    request.input("salary_range2", salary_range2);
+    request.input("short_description", short_description);
+    request.input("long_description", long_description);
+    request.input("file_url", file_url);
+    request.input("category", category);
+    request.input("schedule", new Date(schedule));
     const { recordset } = await request.query(
-            `
+      `
             DECLARE @id_problem INT = 0;
             DECLARE @id_employer_job_offer INT = 0;
 
@@ -186,41 +184,43 @@ class ProblemService {
             SELECT @id_problem AS id_problem, @id_employer_job_offer AS id_employer_job_offer
             
             `
-    )
-    console.log(recordset)
-    return recordset[0] || {}
+    );
+    console.log(recordset);
+    return recordset[0] || {};
   }
 
-  async update (id_problem, {
-    title,
-    employer_name,
-    requeriments,
-    modality,
-    salary_range1,
-    salary_range2,
-    short_description,
-    long_description,
-    file_url,
-    category,
-    schedule
-
-  }) {
-    const cnx = await this.provider.getConnection()
-    const request = await cnx.request()
-    request.input('id_problem', id_problem)
-    request.input('title', title)
-    request.input('employer_name', employer_name)
-    request.input('requeriments', requeriments)
-    request.input('modality', modality)
-    request.input('salary_range1', salary_range1)
-    request.input('salary_range2', salary_range2)
-    request.input('short_description', short_description)
-    request.input('long_description', long_description)
-    request.input('file_url', file_url)
-    request.input('category', category)
-    request.input('schedule', new Date(schedule))
+  async update(
+    id_problem,
+    {
+      title,
+      employer_name,
+      requeriments,
+      modality,
+      salary_range1,
+      salary_range2,
+      short_description,
+      long_description,
+      file_url,
+      category,
+      schedule,
+    }
+  ) {
+    const cnx = await this.provider.getConnection();
+    const request = await cnx.request();
+    request.input("id_problem", id_problem);
+    request.input("title", title);
+    request.input("employer_name", employer_name);
+    request.input("requeriments", requeriments);
+    request.input("modality", modality);
+    request.input("salary_range1", salary_range1);
+    request.input("salary_range2", salary_range2);
+    request.input("short_description", short_description);
+    request.input("long_description", long_description);
+    request.input("file_url", file_url);
+    request.input("category", category);
+    request.input("schedule", new Date(schedule));
     const { recordset } = await request.query(
-            `
+      `
             UPDATE job_offers
             SET title               = @title,
                 employer_name       = @employer_name,
@@ -238,23 +238,23 @@ class ProblemService {
             SELECT @@ROWCOUNT AS [count]
             
             `
-    )
-    return recordset[0] || {}
+    );
+    return recordset[0] || {};
   }
 
-  async remove ({ id_problem }) {
-    const cnx = await this.provider.getConnection()
-    const request = await cnx.request()
-    request.input('id_problem', id_problem)
+  async remove({ id_problem }) {
+    const cnx = await this.provider.getConnection();
+    const request = await cnx.request();
+    request.input("id_problem", id_problem);
     const { recordset } = await request.query(
-            `
+      `
               DELETE FROM job_offers
               WHERE id = @id_problem
               SELECT @@ROWCOUNT AS [count]
             `
-    )
-    return recordset[0] || {}
+    );
+    return recordset[0] || {};
   }
 }
 
-module.exports = ProblemService
+module.exports = ProblemService;
