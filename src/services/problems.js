@@ -126,6 +126,20 @@ class ProblemService {
     category,
     schedule,
   }) {
+    console.log({
+      id_employer,
+      title,
+      employer_name,
+      requirements,
+      modality,
+      salary_range1,
+      salary_range2,
+      short_description,
+      long_description,
+      file_url,
+      category,
+      schedule,
+    });
     const cnx = await this.provider.getConnection();
     const request = await cnx.request();
     request.input("id_employer", id_employer);
@@ -176,8 +190,8 @@ class ProblemService {
 
             SET @id_problem = IDENT_CURRENT('job_offers')
             
-            INSERT INTO employers_job_offers (id_job_offer, id_employer, status)
-            VALUES (@id_problem, @id_employer, 'available')
+            INSERT INTO employers_job_offers (id_job_offer, id_employer)
+            VALUES (@id_problem, @id_employer)
             
             SET @id_employer_job_offer = IDENT_CURRENT('employers_job_offers')
 
