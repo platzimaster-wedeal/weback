@@ -81,35 +81,42 @@ class ProblemService {
     request.input("id_problem", id_problem);
     const { recordset } = await request.query(
       `
-            SELECT A.id,
-                   A.title,
-                   A.short_description,
-                   A.long_description,
-                   D.first_name AS employer_name,
-                   D.last_name AS employer_lastname,
-                   A.modality,
-                   A.salary_range1,
-                   A.salary_range2,
-                   A.category,
-                   A.file_url,
-                   A.requirements,
-                   B.id AS id_employer_job_offer,
-                   B.[status] AS employer_job_offer_status,
-                   B.id_employer AS id_employer,
-                   D.avatar AS user_avatar,
-                   A.guid,
-                   A.created_at,
-                   D.id AS id_user,
-                   E.id_employee AS employee_postulated
-            FROM job_offers AS A WITH (NOLOCK)
-            INNER JOIN employers_job_offers AS B WITH (NOLOCK) ON (A.id = B.id_job_offer)
-            INNER JOIN employers AS C WITH (NOLOCK) ON (B.id_employer = C.id)
-            INNER JOIN users AS D WITH (NOLOCK) ON (C.id_user = D.id)
-            INNER JOIN postulations AS E WITH (NOLOCK) ON (E.id_employers_job_offer = B.id)
-            WHERE A.id = @id_problem
+      SELECT A.id,
+       A.title,
+       A.short_description,
+       A.long_description,
+       D.first_name AS employer_name,
+       D.last_name AS employer_lastname,
+       A.modality,
+       A.salary_range1,
+       A.salary_range2,
+       A.category,
+       A.file_url,
+       A.requirements,
+       B.id AS id_employer_job_offer,
+       B.[status] AS employer_job_offer_status,
+       B.id_employer AS id_employer,
+       D.avatar AS user_avatar,
+       A.guid,
+       A.created_at,
+       D.id AS id_user,
+       E.id_employee AS employee_postulated,
+       G.first_name AS employee_firstname,
+       G.last_name AS employee_lastname,
+       G.avatar,
+       G.id AS id_user_employee
+FROM job_offers AS A WITH (NOLOCK)
+INNER JOIN employers_job_offers AS B WITH (NOLOCK) ON (A.id = B.id_job_offer)
+INNER JOIN employers AS C WITH (NOLOCK) ON (B.id_employer = C.id)
+INNER JOIN users AS D WITH (NOLOCK) ON (C.id_user = D.id)
+INNER JOIN postulations AS E WITH (NOLOCK) ON (E.id_employers_job_offer = B.id)
+INNER JOIN employees AS F WITH(NOLOCK) ON (F.id = E.id_employee)
+INNER JOIN users AS G WITH(NOLOCK)ON (G.id = F.id_user)
+WHERE A.id = @id_problem
             `
     );
-    return recordset[0] || {};
+    console.log(recordset);
+    return recordset || {};
   }
 
   async insert({
