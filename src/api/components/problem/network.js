@@ -12,6 +12,17 @@ router.get("/:id/getPostulated", getPostulatedEmployee);
 router.post("/", secure("insert"), insert);
 router.put("/:id", update);
 router.delete("/:id", secure("remove"), remove);
+router.patch("/:id_employer_jobOffer", setProblemSolved);
+
+function setProblemSolved(req, res, next) {
+  console.log(req.params);
+  controller
+    .patch(req.params)
+    .then((result) => {
+      response.success(req, res, result, 201);
+    })
+    .catch(next);
+}
 
 function list(req, res, next) {
   controller
